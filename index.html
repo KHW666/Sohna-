@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 :root{
   color-scheme:light;
@@ -96,7 +98,6 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .sp-item{height:44px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif TC",serif;font-size:22px;scroll-snap-align:center;cursor:pointer;color:var(--faint);transition:color .15s,font-size .15s}
 .sp-item.sel{color:var(--ink);font-size:26px;font-weight:700}
 .tp-sep{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:700;color:var(--ink);padding:0 2px;flex-shrink:0;margin-bottom:4px}
-.tp-center-line{position:absolute;left:0;right:0;height:44px;top:44px;border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);pointer-events:none}
 
 /* Saved time display */
 .time-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -170,7 +171,6 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .cal-cell.c-range,.cal-cell.c-hover{background:var(--accent-soft);color:var(--accent-ink)}
 .cal-cell.c-today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--accent)}
 .cal-sel-text{font-size:13px;color:var(--muted);margin-top:10px;min-height:20px;text-align:center}
-.cal-hint{font-size:12px;color:var(--faint);text-align:center;margin-top:6px}
 
 /* Modals */
 .overlay{position:fixed;inset:0;background:rgba(30,26,20,.4);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
@@ -182,13 +182,24 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .modal input:focus{outline:none;border-color:var(--accent)}
 .modal .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
-/* Access gate overlay */
+/* Access gate */
 #accessOverlay{z-index:100}
 #accessOverlay .modal{text-align:center}
 #accessOverlay .modal h3{font-size:20px;margin-bottom:6px}
 .access-sub{font-size:14px;color:var(--muted);margin-bottom:18px}
 .access-logo{font-size:36px;margin-bottom:12px}
 #accessInput{text-align:center;letter-spacing:2px}
+
+/* Loading overlay */
+#loadOverlay{z-index:95;background:var(--paper)}
+#loadOverlay .modal{text-align:center;border:none;background:transparent;box-shadow:none}
+.load-spinner{width:36px;height:36px;border:3px solid var(--line-strong);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Sync indicator */
+#syncDot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:6px;transition:.3s}
+#syncDot.saving{background:var(--amber);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -199,7 +210,9 @@ td.person{background:#fbf8f1;vertical-align:middle}
 <div class="page">
 
   <header class="top">
-    <div><h1><span class="dot"></span>Sohna Vehicle Booking System</h1></div>
+    <div>
+      <h1><span class="dot"></span>Sohna Vehicle Booking System<span id="syncDot" title="Synced"></span></h1>
+    </div>
     <div class="controls">
       <span class="badge" id="adminBadge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg>
@@ -246,8 +259,16 @@ td.person{background:#fbf8f1;vertical-align:middle}
 
 </div>
 
+<!-- Loading overlay -->
+<div class="overlay on" id="loadOverlay">
+  <div class="modal">
+    <div class="load-spinner"></div>
+    <p style="color:var(--muted);font-size:14px">Connecting…</p>
+  </div>
+</div>
+
 <!-- Access gate -->
-<div class="overlay on" id="accessOverlay">
+<div class="overlay" id="accessOverlay">
   <div class="modal">
     <div class="access-logo">🚗</div>
     <h3>Sohna Vehicle Booking</h3>
@@ -287,11 +308,24 @@ td.person{background:#fbf8f1;vertical-align:middle}
 <div class="toast" id="toast"></div>
 
 <script>
-const HASH_A    = 'e7379073017d2c4b0958a3810724faaa34effb990d50c33cd30612a103e4ca2d';
-const HASH_U    = 'c3c8f4a8dcc1bc7b110fc36b7ca2da4ae6fd03024aeba5e0d3b3c1970e844fc3';
-const DATA_KEY  = 'sohna_schedule_v1';
-const SESS_KEY  = 'sohna_sess_v1';
-const SESS_MS   = 7 * 24 * 60 * 60 * 1000;
+// ── Firebase ──
+const fbApp = firebase.initializeApp({
+  apiKey: "AIzaSyDc3y0BWxLRqeA7pr9cLga-oXdstO2T2qs",
+  authDomain: "sohna-80f5f.firebaseapp.com",
+  databaseURL: "https://sohna-80f5f-default-rtdb.firebaseio.com",
+  projectId: "sohna-80f5f",
+  storageBucket: "sohna-80f5f.firebasestorage.app",
+  messagingSenderId: "511763453474",
+  appId: "1:511763453474:web:f08599365265b059b95c7b"
+});
+const db    = firebase.database();
+const dbRef = db.ref('sohna');
+
+// ── Constants ──
+const HASH_A   = 'e7379073017d2c4b0958a3810724faaa34effb990d50c33cd30612a103e4ca2d';
+const HASH_U   = 'c3c8f4a8dcc1bc7b110fc36b7ca2da4ae6fd03024aeba5e0d3b3c1970e844fc3';
+const SESS_KEY = 'sohna_sess_v1';
+const SESS_MS  = 7 * 24 * 60 * 60 * 1000;
 const FLASH_MSGS = [
   'Stay home, Stay safe',
   'Please contact Mr No',
@@ -303,12 +337,13 @@ const FLASH_MSGS = [
 ];
 
 let state = { persons:[], addresses:{}, cells:{}, admin:{}, holidays:[] };
-let isAdmin      = false;
-let modalCb      = null;
-let pasteResults = {};
+let isAdmin       = false;
+let modalCb       = null;
+let pasteResults  = {};
 let cellEditState = {};
-let calPicker    = null;
-let calEditId    = null;
+let calPicker     = null;
+let calEditId     = null;
+let fbListening   = false;
 
 const I = {
   chev:  '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>',
@@ -319,6 +354,7 @@ const I = {
   car:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="8" rx="3"/><path d="M5 10l2.5-4h9l2.5 4"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M9 10h6"/></svg>',
   phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="17" r="1" fill="currentColor"/><path d="M9 5h6"/></svg>',
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+  edit:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
 };
 
 function esc(s){ return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -349,7 +385,7 @@ function matchDate(str,col){
   return cs.has(col);
 }
 
-// ── State ──
+// ── Normalize state ──
 function normalize(){
   state.persons  = state.persons  || [];
   state.addresses= state.addresses|| {};
@@ -360,35 +396,52 @@ function normalize(){
     const now=new Date(), add=(n)=>{const d=new Date(now);d.setDate(now.getDate()+n);return localISO(d);};
     state.holidays=[{id:genId(),start:add(7),end:add(7)},{id:genId(),start:add(21),end:add(23)}];
   }
+  // Fix legacy array format
+  if(!Array.isArray(state.persons)) state.persons = Object.values(state.persons);
+  if(!Array.isArray(state.holidays)) state.holidays = Object.values(state.holidays);
   Object.keys(state.cells).forEach(k=>{
     const c=state.cells[k]; if(c.times&&c.times.length&&!c.time){c.time=c.times[0];} delete c.times;
   });
 }
-function save(){ try{localStorage.setItem(DATA_KEY,JSON.stringify(state));}catch(e){} }
-function mergeRemote(r){
-  if(!r)return;
-  (r.persons||[]).forEach(p=>{if(!state.persons.includes(p))state.persons.push(p);});
-  Object.assign(state.addresses,r.addresses||{});
-  Object.keys(r.cells||{}).forEach(k=>{
-    if(!state.cells[k])state.cells[k]=r.cells[k];
-    else if(r.cells[k].time&&!state.cells[k].time)state.cells[k].time=r.cells[k].time;
+
+// ── Save to Firebase ──
+let saveTimer;
+function save(){
+  const dot=document.getElementById('syncDot');
+  if(dot){dot.classList.add('saving');}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    dbRef.set(state)
+      .then(()=>{if(dot){dot.classList.remove('saving');}})
+      .catch(()=>toast('⚠ Sync error'));
+  },300); // debounce 300ms
+}
+
+// ── Load from Firebase (real-time) ──
+function startListening(){
+  if(fbListening) return;
+  fbListening=true;
+  dbRef.on('value', snapshot=>{
+    const data=snapshot.val();
+    if(data){ state=data; normalize(); }
+    else { normalize(); }
+    document.getElementById('loadOverlay').classList.remove('on');
+    render(); renderPasteTable(); renderHolidays();
+    bindScrollSync();
+  }, err=>{
+    document.getElementById('loadOverlay').classList.remove('on');
+    toast('⚠ Cannot connect to database');
+    normalize();
+    render(); renderPasteTable(); renderHolidays();
+    bindScrollSync();
   });
-  Object.keys(r.admin||{}).forEach(k=>{state.admin[k]=Object.assign({},state.admin[k]||{},r.admin[k]);});
-  if(r.holidays)state.holidays=r.holidays;
 }
-function load(){
-  try{const raw=localStorage.getItem(DATA_KEY);if(raw){state=JSON.parse(raw);normalize();}}catch(e){}
-  render(); renderPasteTable(); renderHolidays();
-  bindScrollSync();
-}
-window.addEventListener('storage',e=>{
-  if(e.key===DATA_KEY&&e.newValue){try{mergeRemote(JSON.parse(e.newValue));save();render();renderPasteTable();renderHolidays();}catch(err){}}
-});
 
 // ── Scroll sync ──
 function bindScrollSync(){
   const a=document.getElementById('schedWrap'), b=document.getElementById('pasteWrap');
-  if(!a||!b)return;
+  if(!a||!b||a._syncBound)return;
+  a._syncBound=true;
   let busy=false;
   a.addEventListener('scroll',()=>{if(busy)return;busy=true;b.scrollLeft=a.scrollLeft;requestAnimationFrame(()=>busy=false);},{passive:true});
   b.addEventListener('scroll',()=>{if(busy)return;busy=true;a.scrollLeft=b.scrollLeft;requestAnimationFrame(()=>busy=false);},{passive:true});
@@ -415,7 +468,6 @@ const ITEM_H = 44;
 
 function makeScrollPicker(items, initVal, onChange){
   const outer=document.createElement('div'); outer.className='sp-col-outer';
-
   const upBtn=document.createElement('button'); upBtn.type='button'; upBtn.className='sp-arrow'; upBtn.textContent='▲';
   const wrap=document.createElement('div'); wrap.className='sp-col';
   const downBtn=document.createElement('button'); downBtn.type='button'; downBtn.className='sp-arrow'; downBtn.textContent='▼';
@@ -434,7 +486,6 @@ function makeScrollPicker(items, initVal, onChange){
     els.forEach((e,i)=>e.classList.toggle('sel',i===idx));
     if(items[idx]!==undefined) onChange(items[idx]);
   }
-
   function nudge(targetIdx){
     const clamped=Math.max(0,Math.min(items.length-1,targetIdx));
     wrap.scrollTo({top:clamped*ITEM_H,behavior:'smooth'});
@@ -453,39 +504,26 @@ function makeScrollPicker(items, initVal, onChange){
     },150);
     updateSel();
   },{passive:true});
-
-  // Slower mouse wheel — 0.4× per tick, let snap settle
   wrap.addEventListener('wheel',e=>{
     e.preventDefault();
     wrap.scrollTop += Math.sign(e.deltaY) * ITEM_H * 0.4;
   },{passive:false});
 
-  upBtn.onclick = ()=>{
-    const cur=Math.round(wrap.scrollTop/ITEM_H);
-    nudge(cur-1);
-  };
-  downBtn.onclick = ()=>{
-    const cur=Math.round(wrap.scrollTop/ITEM_H);
-    nudge(cur+1);
-  };
-
-  outer.appendChild(upBtn);
-  outer.appendChild(wrap);
-  outer.appendChild(downBtn);
+  upBtn.onclick = ()=>nudge(Math.round(wrap.scrollTop/ITEM_H)-1);
+  downBtn.onclick = ()=>nudge(Math.round(wrap.scrollTop/ITEM_H)+1);
+  outer.appendChild(upBtn); outer.appendChild(wrap); outer.appendChild(downBtn);
   return outer;
 }
 
 function makeTimePicker(initH, initM, onSave, onCancel){
   let curH=initH, curM=initM;
   const container=document.createElement('div'); container.style.cssText='display:flex;flex-direction:column;align-items:center;gap:10px';
-
   const tpWrap=document.createElement('div'); tpWrap.className='tp-wrap';
   const hPicker=makeScrollPicker(HOURS,initH,v=>curH=v);
   const sep=document.createElement('span'); sep.className='tp-sep'; sep.textContent=':';
   const mPicker=makeScrollPicker(MINS,MINS.includes(initM)?initM:0,v=>curM=v);
   tpWrap.appendChild(hPicker); tpWrap.appendChild(sep); tpWrap.appendChild(mPicker);
   container.appendChild(tpWrap);
-
   const acts=document.createElement('div'); acts.className='picker-actions';
   const cancelBtn=document.createElement('button'); cancelBtn.type='button'; cancelBtn.className='cell-btn cancel'; cancelBtn.textContent='Cancel'; cancelBtn.onclick=onCancel;
   const saveBtn=document.createElement('button'); saveBtn.type='button'; saveBtn.className='cell-btn save-time';
@@ -505,18 +543,17 @@ function showFlash(cellEl, fixedMsg){
   if(old){clearTimeout(old._timer);old.remove();}
   let msg;
   if(fixedMsg){
-    msg = fixedMsg;
+    msg=fixedMsg;
   } else {
-    const count = (_flashCounts.get(cellEl) || 0) + 1;
-    _flashCounts.set(cellEl, count);
-    if(count >= 3){
-      msg = JOKE_MSG;
+    const count=(_flashCounts.get(cellEl)||0)+1;
+    _flashCounts.set(cellEl,count);
+    if(count>=3){
+      msg=JOKE_MSG;
     } else {
-      const pool = FLASH_MSGS.filter(m => m !== JOKE_MSG);
+      const pool=FLASH_MSGS.filter(m=>m!==JOKE_MSG);
       let next;
-      do { next = Math.floor(Math.random()*pool.length); } while(pool.length>1 && next===_flashIdx);
-      _flashIdx = next;
-      msg = pool[_flashIdx];
+      do{next=Math.floor(Math.random()*pool.length);}while(pool.length>1&&next===_flashIdx);
+      _flashIdx=next; msg=pool[_flashIdx];
     }
   }
   const overlay=document.createElement('div'); overlay.className='flash-overlay'; overlay.textContent=msg;
@@ -554,6 +591,7 @@ function render(){
     let inner=`<div class="pname">${esc(p)}${I.chev}</div>`;
     if(state.addresses[p]) inner+=`<div class="paddr-line">📍 ${esc(state.addresses[p])}</div>`;
     inner+=`<div class="pmenu">
+      <button class="mbtn" onclick="renamePerson('${jsesc(p)}')">${I.edit} Edit Name</button>
       <button class="mbtn" onclick="editAddr('${jsesc(p)}')">${I.pin} My Address</button>
       <button class="mbtn danger" onclick="delPerson('${jsesc(p)}')">${I.trash} Remove Name</button>
     </div>`;
@@ -562,8 +600,7 @@ function render(){
     dates.forEach(dt=>{
       const td=document.createElement('td'), k=ckey(p,dt.iso);
       const cell=document.createElement('div');
-      const blocked=isHoliday(dt.iso);
-      const isSunday=dt.dow===0;
+      const blocked=isHoliday(dt.iso), isSunday=dt.dow===0;
       cell.className='cell'+(blocked?' blkd':'');
 
       if(blocked){
@@ -574,7 +611,7 @@ function render(){
         const s=document.createElement('div'); s.className='cell-sunday'; s.textContent='🏠';
         s.onclick=()=>showFlash(cell,'Stay home, Stay safe');
         cell.appendChild(s);
-        appendAdminInfo(cell, k);
+        appendAdminInfo(cell,k);
       } else {
         const cs=cellEditState[k]||{};
         const savedTime=(state.cells[k]||{}).time||'';
@@ -584,8 +621,7 @@ function render(){
         if(cs.editing){
           const initH=cs.h!=null?cs.h:(savedTime?parseInt(savedTime.split(':')[0]):8);
           const initM=cs.m!=null?cs.m:(savedTime?parseInt(savedTime.split(':')[1]):0);
-          const picker=makeTimePicker(
-            initH, initM,
+          const picker=makeTimePicker(initH,initM,
             val=>{state.cells[k]={time:val};delete cellEditState[k];save();render();toast('Saved: '+val);},
             ()=>{delete cellEditState[k];render();}
           );
@@ -601,7 +637,7 @@ function render(){
             row.appendChild(editBtn);
           }
           cell.appendChild(row);
-          appendAdminInfo(cell, k);
+          appendAdminInfo(cell,k);
         } else {
           if(!isAdmin){
             const prompt=document.createElement('button'); prompt.type='button'; prompt.className='cell-prompt';
@@ -609,7 +645,7 @@ function render(){
             prompt.onclick=()=>{cellEditState[k]={editing:true,h:8,m:0};render();};
             cell.appendChild(prompt);
           }
-          appendAdminInfo(cell, k);
+          appendAdminInfo(cell,k);
         }
       }
       td.appendChild(cell); tr.appendChild(td);
@@ -623,11 +659,10 @@ function render(){
   atd.appendChild(ab); addtr.appendChild(atd);
   const sp=document.createElement('td'); sp.colSpan=dates.length; addtr.appendChild(sp);
   body.appendChild(addtr);
-
   document.getElementById('importSection').classList.toggle('on',isAdmin);
 }
 
-function appendAdminInfo(cell, k){
+function appendAdminInfo(cell,k){
   const a=state.admin[k]||{};
   if(a.driver||a.plate||a.mobile){
     const box=document.createElement('div'); box.className='admininfo';
@@ -640,6 +675,17 @@ function appendAdminInfo(cell, k){
 
 // ── User actions ──
 function addPerson(){openModal('Enter name','',v=>{v=v.trim();if(!v)return;if(!state.persons.includes(v)){state.persons.push(v);save();render();renderPasteTable();}else toast('Name already exists');});}
+function renamePerson(p){
+  openModal('Rename "'+p+'"',p,v=>{
+    v=v.trim();if(!v||v===p)return;
+    if(state.persons.includes(v)){toast('Name already exists');return;}
+    const idx=state.persons.indexOf(p);if(idx>=0)state.persons[idx]=v;
+    if(state.addresses[p]){state.addresses[v]=state.addresses[p];delete state.addresses[p];}
+    const rekey=obj=>{Object.keys(obj).forEach(k=>{if(k.startsWith(p+'|')){obj[v+'|'+k.slice(p.length+1)]=obj[k];delete obj[k];}});};
+    rekey(state.cells);rekey(state.admin);
+    save();render();renderPasteTable();toast('Renamed to '+v);
+  });
+}
 function editAddr(p){openModal('Address for "'+p+'" (blank to remove)',state.addresses[p]||'',v=>{v=v.trim();if(v)state.addresses[p]=v;else delete state.addresses[p];save();render();renderPasteTable();});}
 function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return;
   state.persons=state.persons.filter(x=>x!==p);delete state.addresses[p];
@@ -651,8 +697,11 @@ function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return
 function checkAccess(){
   try{
     const raw=localStorage.getItem(SESS_KEY);
-    if(raw){const s=JSON.parse(raw);if(s.ts&&(Date.now()-s.ts)<SESS_MS){document.getElementById('accessOverlay').classList.remove('on');load();return;}}
+    if(raw){const s=JSON.parse(raw);if(s.ts&&(Date.now()-s.ts)<SESS_MS){startListening();return;}}
   }catch(e){}
+  // No valid session — show login
+  document.getElementById('loadOverlay').classList.remove('on');
+  document.getElementById('accessOverlay').classList.add('on');
   const inp=document.getElementById('accessInput');
   setTimeout(()=>inp.focus(),40);
   inp.onkeydown=e=>{if(e.key==='Enter')doAccess();};
@@ -664,12 +713,12 @@ async function doAccess(){
   if(h===HASH_U||h===HASH_A){
     localStorage.setItem(SESS_KEY,JSON.stringify({ts:Date.now()}));
     document.getElementById('accessOverlay').classList.remove('on');
-    load();
+    document.getElementById('loadOverlay').classList.add('on');
+    startListening();
     if(h===HASH_A){
       isAdmin=true;
       document.getElementById('adminBadge').classList.add('on');
       document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
-      render();renderPasteTable();renderHolidays();toast('Admin mode enabled');
     }
   } else {
     toast('Incorrect access code');
@@ -696,7 +745,7 @@ async function toggleAdmin(){
   },true);
 }
 
-// ── Driver Info (Booking Import) ──
+// ── Driver Info ──
 function renderPasteTable(){
   const dates=fmtDates(),head=document.getElementById('paste-head'),body=document.getElementById('paste-body');
   head.innerHTML='';body.innerHTML='';
@@ -746,7 +795,7 @@ function buildPasteCell(cell,k,person,dateIso){
 
 function parseBookingText(text){
   const get=key=>{const m=text.match(new RegExp(key+'\\s*:?\\s*([^\\n\\r]+)','i'));return m?m[1].trim():null;};
-  return {reportingTime:get('REPORTING\\s+TIME'),reportingDate:get('REPORTING\\s+DATE'),guestName:get('GUEST\\s+NAME'),vehicleNumber:get('VEHICLE\\s+NUMBER'),chauffeur:get('CHAUFFEUR'),mobileNo:get('MOBILE\\s+NO\\.?')};
+  return{reportingTime:get('REPORTING\\s+TIME'),reportingDate:get('REPORTING\\s+DATE'),guestName:get('GUEST\\s+NAME'),vehicleNumber:get('VEHICLE\\s+NUMBER'),chauffeur:get('CHAUFFEUR'),mobileNo:get('MOBILE\\s+NO\\.?')};
 }
 
 function validatePaste(text,k,person,dateIso,cell){
@@ -780,7 +829,6 @@ function renderHolidays(){
     row.appendChild(dot);row.appendChild(lbl);row.appendChild(del);list.appendChild(row);
   });
 }
-
 function delHoliday(id){
   state.holidays=state.holidays.filter(h=>h.id!==id);save();render();renderPasteTable();renderHolidays();
 }
@@ -801,14 +849,9 @@ function saveCalModal(){
   if(!calPicker)return;
   const sel=calPicker.getSelection();
   if(!sel){toast('Please select at least one date');return;}
-  if(calEditId){
-    const h=state.holidays.find(x=>x.id===calEditId);
-    if(h){h.start=sel.start;h.end=sel.end;}
-  } else {
-    state.holidays.push({id:genId(),start:sel.start,end:sel.end});
-  }
-  save();render();renderPasteTable();renderHolidays();closeCalModal();
-  toast('Holiday saved');
+  if(calEditId){const h=state.holidays.find(x=>x.id===calEditId);if(h){h.start=sel.start;h.end=sel.end;}}
+  else{state.holidays.push({id:genId(),start:sel.start,end:sel.end});}
+  save();render();renderPasteTable();renderHolidays();closeCalModal();toast('Holiday saved');
 }
 function updateCalSelText(sel){
   const el=document.getElementById('calSelText');if(!el)return;
@@ -821,8 +864,7 @@ function makeCalendar(initSel, onSelChange){
   const now=new Date();
   let viewY=now.getFullYear(), viewM=now.getMonth();
   let selStart=initSel?initSel.start:null, selEnd=initSel?initSel.end:null;
-  // phase: 'none' | 'one' (first click done, awaiting second) | 'done'
-  let phase = initSel ? 'done' : 'none';
+  let phase=initSel?'done':'none';
   let hoverDate=null;
   const todayISO=localISO(now);
   const el=document.createElement('div');
@@ -837,11 +879,9 @@ function makeCalendar(initSel, onSelChange){
     const next=document.createElement('button');next.type='button';next.textContent='›';
     next.onclick=()=>{viewM++;if(viewM>11){viewM=0;viewY++;}renderCal();};
     hdr.appendChild(prev);hdr.appendChild(title);hdr.appendChild(next);el.appendChild(hdr);
-
     const dayHdr=document.createElement('div');dayHdr.className='cal-days';
     ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d=>{const c=document.createElement('div');c.className='cal-dh';c.textContent=d;dayHdr.appendChild(c);});
     el.appendChild(dayHdr);
-
     const grid=document.createElement('div');grid.className='cal-grid';
     const firstDow=new Date(viewY,viewM,1).getDay();
     const startOff=(firstDow===0?6:firstDow-1);
@@ -859,15 +899,8 @@ function makeCalendar(initSel, onSelChange){
       if(inRange)c.classList.add('c-range');
       if(inHover)c.classList.add('c-hover');
       c.onclick=()=>{
-        if(phase==='none'||phase==='done'){
-          // First click — start new selection
-          selStart=iso; selEnd=null; phase='one';
-        } else {
-          // Second click — complete selection
-          if(iso<selStart){selEnd=selStart;selStart=iso;}
-          else{selEnd=iso;}
-          phase='done';
-        }
+        if(phase==='none'||phase==='done'){selStart=iso;selEnd=null;phase='one';}
+        else{if(iso<selStart){selEnd=selStart;selStart=iso;}else{selEnd=iso;}phase='done';}
         hoverDate=null;renderCal();onSelChange&&onSelChange(getSelection());
       };
       c.onmouseenter=()=>{if(phase==='one'){hoverDate=iso;renderCal();}};
@@ -876,13 +909,10 @@ function makeCalendar(initSel, onSelChange){
     }
     el.appendChild(grid);
   }
-
   function getSelection(){
     if(phase==='none'||!selStart)return null;
-    // phase 'one' = single day selected; phase 'done' = range complete
     return{start:selStart,end:selEnd||selStart};
   }
-
   renderCal();
   return{el,getSelection};
 }
