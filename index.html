@@ -310,7 +310,7 @@ td.person{background:#fbf8f1;vertical-align:middle}
 
 <script>
 // ── Firebase ──
-const fbApp = firebase.initializeApp({
+const FB_CFG = {
   apiKey: "AIzaSyDc3y0BWxLRqeA7pr9cLga-oXdstO2T2qs",
   authDomain: "sohna-80f5f.firebaseapp.com",
   databaseURL: "https://sohna-80f5f-default-rtdb.firebaseio.com",
@@ -318,7 +318,9 @@ const fbApp = firebase.initializeApp({
   storageBucket: "sohna-80f5f.firebasestorage.app",
   messagingSenderId: "511763453474",
   appId: "1:511763453474:web:f08599365265b059b95c7b"
-});
+};
+const fbApp  = firebase.initializeApp(FB_CFG);
+const fbApp2 = firebase.initializeApp(FB_CFG, 'verify');
 const db    = firebase.database();
 const dbRef = db.ref('sohna');
 
@@ -386,12 +388,8 @@ function normalize(){
   state.addresses= state.addresses|| {};
   state.cells    = state.cells    || {};
   state.admin    = state.admin    || {};
-  state.holidays = state.holidays !== undefined ? state.holidays : null;
-  if(!state.holidays){
-    const now=new Date(), add=(n)=>{const d=new Date(now);d.setDate(now.getDate()+n);return localISO(d);};
-    state.holidays=[{id:genId(),start:add(7),end:add(7)},{id:genId(),start:add(21),end:add(23)}];
-  }
-  // Fix legacy array format
+  state.holidays = state.holidays || [];
+  // Fix Firebase object-to-array conversion
   if(!Array.isArray(state.persons)) state.persons = Object.values(state.persons);
   if(!Array.isArray(state.holidays)) state.holidays = Object.values(state.holidays);
   Object.keys(state.cells).forEach(k=>{
@@ -424,6 +422,7 @@ function save(){
 
 // ── Load from Firebase (real-time) ──
 function startListening(){
+  document.getElementById('loadOverlay').classList.remove('on');
   if(fbListening) return;
   fbListening=true;
   dbRef.on('value', snapshot=>{
@@ -749,26 +748,21 @@ async function doAccess(){
 // ── Admin login / logout ──
 async function toggleAdmin(){
   if(isAdmin){
+    // De-escalate: stay logged in, just remove admin mode
     isAdmin=false;
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
-    fbListening=false;
-    dbRef.off();
-    await firebase.auth().signOut();
-    render();
-    showLoginGate();
+    render();toast('Exited admin mode');
   } else {
-    // Escalate: sign out current user, re-login as admin
+    // Escalate: verify admin password via secondary Firebase app (no session change)
     openModal('Enter admin code','',async v=>{
       const pw=v.trim(); if(!pw) return;
       try{
-        fbListening=false; dbRef.off();
-        await firebase.auth().signOut();
-        await firebase.auth().signInWithEmailAndPassword(ADMIN_EMAIL, pw);
+        await firebase.app('verify').auth().signInWithEmailAndPassword(ADMIN_EMAIL, pw);
+        await firebase.app('verify').auth().signOut();
         isAdmin=true;
         document.getElementById('adminBadge').classList.add('on');
         document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
-        startListening();
         render();renderPasteTable();renderHolidays();toast('Admin mode enabled');
       }catch(e){ toast('Incorrect access code'); }
     },true);
@@ -899,6 +893,19 @@ function makeCalendar(initSel, onSelChange){
   const todayISO=localISO(now);
   const el=document.createElement('div');
 
+  function updateClasses(){
+    el.querySelectorAll('.cal-cell[data-iso]').forEach(c=>{
+      const iso=c.dataset.iso;
+      const isStart=iso===selStart,isEnd=iso===(selEnd||selStart);
+      const inRange=selStart&&selEnd&&iso>selStart&&iso<selEnd;
+      const inHover=phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate;
+      c.classList.toggle('c-start',!!isStart);
+      c.classList.toggle('c-end',!!(isEnd&&selEnd&&selEnd!==selStart));
+      c.classList.toggle('c-range',!!inRange);
+      c.classList.toggle('c-hover',!!inHover);
+    });
+  }
+
   function renderCal(){
     el.innerHTML='';
     const hdr=document.createElement('div');hdr.className='cal-hdr';
@@ -920,24 +927,19 @@ function makeCalendar(initSel, onSelChange){
     for(let d=1;d<=dim;d++){
       const iso=`${viewY}-${pad2(viewM+1)}-${pad2(d)}`;
       const c=document.createElement('div');c.className='cal-cell';c.textContent=d;
+      c.dataset.iso=iso;
       if(iso===todayISO)c.classList.add('c-today');
-      const isStart=iso===selStart,isEnd=iso===(selEnd||selStart);
-      const inRange=selStart&&selEnd&&iso>selStart&&iso<selEnd;
-      const inHover=phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate;
-      if(isStart)c.classList.add('c-start');
-      if(isEnd&&selEnd&&selEnd!==selStart)c.classList.add('c-end');
-      if(inRange)c.classList.add('c-range');
-      if(inHover)c.classList.add('c-hover');
       c.onclick=()=>{
         if(phase==='none'||phase==='done'){selStart=iso;selEnd=null;phase='one';}
         else{if(iso<selStart){selEnd=selStart;selStart=iso;}else{selEnd=iso;}phase='done';}
-        hoverDate=null;renderCal();onSelChange&&onSelChange(getSelection());
+        hoverDate=null;updateClasses();onSelChange&&onSelChange(getSelection());
       };
-      c.onmouseenter=()=>{if(phase==='one'){hoverDate=iso;renderCal();}};
-      c.onmouseleave=()=>{if(phase==='one'){hoverDate=null;renderCal();}};
+      c.onmouseenter=()=>{if(phase==='one'){hoverDate=iso;updateClasses();}};
+      c.onmouseleave=()=>{if(phase==='one'){hoverDate=null;updateClasses();}};
       grid.appendChild(c);
     }
     el.appendChild(grid);
+    updateClasses();
   }
   function getSelection(){
     if(phase==='none'||!selStart)return null;
