@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
 :root{
   color-scheme:light;
@@ -197,9 +198,11 @@ td.person{background:#fbf8f1;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Sync indicator */
-#syncDot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:6px;transition:.3s}
-#syncDot.saving{background:var(--amber);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#syncDot{width:9px;height:9px;border-radius:50%;background:#b0b0a8;display:inline-block;margin-left:8px;vertical-align:middle;transition:background .3s}
+#syncDot.saving{background:#d4a017;animation:pulse 1s infinite}
+#syncDot.synced{background:#22c55e;animation:popGreen .5s ease forwards}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes popGreen{0%{transform:scale(1.5);background:#22c55e}100%{transform:scale(1);background:#22c55e}}
 
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -322,10 +325,8 @@ const db    = firebase.database();
 const dbRef = db.ref('sohna');
 
 // ── Constants ──
-const HASH_A   = 'e7379073017d2c4b0958a3810724faaa34effb990d50c33cd30612a103e4ca2d';
-const HASH_U   = 'c3c8f4a8dcc1bc7b110fc36b7ca2da4ae6fd03024aeba5e0d3b3c1970e844fc3';
-const SESS_KEY = 'sohna_sess_v1';
-const SESS_MS  = 7 * 24 * 60 * 60 * 1000;
+const ADMIN_EMAIL = 'admin@sohna.local';
+const USER_EMAIL  = 'user@sohna.local';
 const FLASH_MSGS = [
   'Stay home, Stay safe',
   'Please contact Mr No',
@@ -363,10 +364,6 @@ function ckey(p,iso){ return p+'|'+iso; }
 function pad2(n){ return String(n).padStart(2,'0'); }
 function genId(){ return Math.random().toString(36).slice(2,8); }
 
-async function sha256(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
 function localISO(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
 function timeToMins(t){ if(!t)return NaN; const m=t.match(/(\d{1,2}):(\d{2})/); return m?parseInt(m[1])*60+parseInt(m[2]):NaN; }
 function stripPrefix(n){ return (n||'').replace(/^\s*(Mr\.?|Mrs\.?|Ms\.?|Miss\.?|Dr\.?|Prof\.?|Sir\.?|Mdm\.?|Madam\.?|Mx\.?)\s*/i,'').trim(); }
@@ -405,16 +402,26 @@ function normalize(){
 }
 
 // ── Save to Firebase ──
-let saveTimer;
+let saveTimer, syncResetTimer;
 function save(){
   const dot=document.getElementById('syncDot');
-  if(dot){dot.classList.add('saving');}
+  if(dot){dot.classList.remove('synced');dot.classList.add('saving');}
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
     dbRef.set(state)
-      .then(()=>{if(dot){dot.classList.remove('saving');}})
-      .catch(()=>toast('⚠ Sync error'));
-  },300); // debounce 300ms
+      .then(()=>{
+        if(dot){
+          dot.classList.remove('saving');
+          dot.classList.add('synced');
+          clearTimeout(syncResetTimer);
+          syncResetTimer=setTimeout(()=>dot.classList.remove('synced'),3000);
+        }
+      })
+      .catch(()=>{
+        if(dot)dot.classList.remove('saving');
+        toast('⚠ Sync error');
+      });
+  },300);
 }
 
 // ── Load from Firebase (real-time) ──
@@ -694,55 +701,80 @@ function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return
   save();render();renderPasteTable();}
 
 // ── Access gate ──
-function checkAccess(){
-  try{
-    const raw=localStorage.getItem(SESS_KEY);
-    if(raw){const s=JSON.parse(raw);if(s.ts&&(Date.now()-s.ts)<SESS_MS){startListening();return;}}
-  }catch(e){}
-  // No valid session — show login
+function showLoginGate(){
   document.getElementById('loadOverlay').classList.remove('on');
   document.getElementById('accessOverlay').classList.add('on');
   const inp=document.getElementById('accessInput');
+  inp.value='';
   setTimeout(()=>inp.focus(),40);
   inp.onkeydown=e=>{if(e.key==='Enter')doAccess();};
 }
 
-async function doAccess(){
-  const v=document.getElementById('accessInput').value;
-  const h=await sha256(v.trim());
-  if(h===HASH_U||h===HASH_A){
-    localStorage.setItem(SESS_KEY,JSON.stringify({ts:Date.now()}));
-    document.getElementById('accessOverlay').classList.remove('on');
-    document.getElementById('loadOverlay').classList.add('on');
-    startListening();
-    if(h===HASH_A){
-      isAdmin=true;
-      document.getElementById('adminBadge').classList.add('on');
-      document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
+function checkAccess(){
+  firebase.auth().onAuthStateChanged(user=>{
+    if(user){
+      if(user.email===ADMIN_EMAIL){
+        isAdmin=true;
+        document.getElementById('adminBadge').classList.add('on');
+        document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
+      }
+      startListening();
+    } else {
+      showLoginGate();
     }
-  } else {
+  });
+}
+
+async function doAccess(){
+  const pw=document.getElementById('accessInput').value.trim();
+  if(!pw) return;
+  // Try user login, then admin login
+  const emails=[USER_EMAIL, ADMIN_EMAIL];
+  let success=false;
+  for(const email of emails){
+    try{
+      await firebase.auth().signInWithEmailAndPassword(email, pw);
+      success=true; break;
+    }catch(e){}
+  }
+  if(!success){
     toast('Incorrect access code');
     document.getElementById('accessInput').value='';
     setTimeout(()=>document.getElementById('accessInput').focus(),50);
+  } else {
+    document.getElementById('accessOverlay').classList.remove('on');
+    document.getElementById('loadOverlay').classList.add('on');
+    // onAuthStateChanged will fire and call startListening
   }
 }
 
-// ── Admin login ──
+// ── Admin login / logout ──
 async function toggleAdmin(){
   if(isAdmin){
     isAdmin=false;
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
-    render();toast('Logged out of admin');return;
+    fbListening=false;
+    dbRef.off();
+    await firebase.auth().signOut();
+    render();
+    showLoginGate();
+  } else {
+    // Escalate: sign out current user, re-login as admin
+    openModal('Enter admin code','',async v=>{
+      const pw=v.trim(); if(!pw) return;
+      try{
+        fbListening=false; dbRef.off();
+        await firebase.auth().signOut();
+        await firebase.auth().signInWithEmailAndPassword(ADMIN_EMAIL, pw);
+        isAdmin=true;
+        document.getElementById('adminBadge').classList.add('on');
+        document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
+        startListening();
+        render();renderPasteTable();renderHolidays();toast('Admin mode enabled');
+      }catch(e){ toast('Incorrect access code'); }
+    },true);
   }
-  openModal('Enter admin code','',async v=>{
-    const h=await sha256(v.trim());
-    if(h!==HASH_A){toast('Incorrect access code');return;}
-    isAdmin=true;
-    document.getElementById('adminBadge').classList.add('on');
-    document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
-    render();renderPasteTable();renderHolidays();toast('Admin mode enabled');
-  },true);
 }
 
 // ── Driver Info ──
