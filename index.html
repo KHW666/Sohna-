@@ -633,7 +633,7 @@ function render(){
           const row=document.createElement('div'); row.className='time-row';
           const badge=document.createElement('div'); badge.className='time-badge'; badge.textContent=savedTime;
           row.appendChild(badge);
-          if(!hasAdminInfo&&!isAdmin){
+          if(!isAdmin){
             const editBtn=document.createElement('button'); editBtn.type='button'; editBtn.className='cell-btn edit-time';
             editBtn.innerHTML='<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit';
             editBtn.onclick=()=>{const p2=savedTime.split(':');cellEditState[k]={editing:true,h:parseInt(p2[0]),m:parseInt(p2[1])};render();};
@@ -713,7 +713,6 @@ function showLoginGate(){
 function checkAccess(){
   firebase.auth().onAuthStateChanged(async user=>{
     if(user){
-      // Check 7-day session expiry
       const ts=parseInt(localStorage.getItem(SESS_KEY)||'0');
       if(ts && (Date.now()-ts) > SESS_MS){
         localStorage.removeItem(SESS_KEY);
@@ -752,13 +751,11 @@ async function doAccess(){
 // ── Admin login / logout ──
 async function toggleAdmin(){
   if(isAdmin){
-    // De-escalate: stay logged in, just remove admin mode
     isAdmin=false;
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
     render(); toast('Exited admin mode');
   } else {
-    // Escalate: verify via secondary Firebase app, no session change
     openModal('Enter admin code','',async v=>{
       const pw=v.trim(); if(!pw) return;
       try{
