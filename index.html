@@ -90,7 +90,7 @@ td.person{background:#fbf8f1;vertical-align:middle}
 /* Scroll time picker */
 .tp-wrap{display:flex;align-items:center;gap:0;background:#fff;border:1.5px solid var(--line-strong);border-radius:14px;padding:4px 6px;width:152px;flex-shrink:0}
 .sp-col-outer{display:flex;flex-direction:column;align-items:center;gap:0;width:56px}
-.sp-arrow{font-family:inherit;font-size:13px;cursor:pointer;background:none;border:none;color:var(--faint);padding:2px 8px;border-radius:6px;line-height:1;transition:.1s;user-select:none}
+.sp-arrow{font-family:inherit;font-size:10px;cursor:pointer;background:none;border:none;color:var(--faint);padding:1px 5px;border-radius:6px;line-height:1;transition:.1s;user-select:none}
 .sp-arrow:hover{background:var(--accent-soft);color:var(--accent-ink)}
 .sp-col{width:56px;height:132px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 28%,black 72%,transparent 100%);
@@ -184,7 +184,7 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .modal .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
 /* Access gate */
-#accessOverlay{z-index:100}
+#accessOverlay{z-index:100;background:var(--paper)}
 #accessOverlay .modal{text-align:center}
 #accessOverlay .modal h3{font-size:20px;margin-bottom:6px}
 .access-sub{font-size:14px;color:var(--muted);margin-bottom:18px}
@@ -273,9 +273,7 @@ td.person{background:#fbf8f1;vertical-align:middle}
 <!-- Access gate -->
 <div class="overlay" id="accessOverlay">
   <div class="modal">
-    <div class="access-logo">🚗</div>
-    <h3>Sohna Vehicle Booking</h3>
-    <p class="access-sub">Enter your access code to continue</p>
+    <h3>Hi</h3>
     <input id="accessInput" type="password" autocomplete="off" placeholder="">
     <div class="acts" style="justify-content:center">
       <button class="btn primary" onclick="doAccess()">Enter</button>
