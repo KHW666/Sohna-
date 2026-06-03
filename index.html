@@ -389,7 +389,6 @@ function normalize(){
   state.cells    = state.cells    || {};
   state.admin    = state.admin    || {};
   state.holidays = state.holidays || [];
-  // Fix Firebase object-to-array conversion
   if(!Array.isArray(state.persons)) state.persons = Object.values(state.persons);
   if(!Array.isArray(state.holidays)) state.holidays = Object.values(state.holidays);
   Object.keys(state.cells).forEach(k=>{
@@ -697,6 +696,10 @@ function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return
   Object.keys(state.admin).forEach(k=>{if(k.startsWith(p+'|'))delete state.admin[k];});
   save();render();renderPasteTable();}
 
+// ── Session ──
+const SESS_KEY = 'sohna_ts';
+const SESS_MS  = 7 * 24 * 60 * 60 * 1000;
+
 // ── Access gate ──
 function showLoginGate(){
   document.getElementById('loadOverlay').classList.remove('on');
@@ -708,12 +711,14 @@ function showLoginGate(){
 }
 
 function checkAccess(){
-  firebase.auth().onAuthStateChanged(user=>{
+  firebase.auth().onAuthStateChanged(async user=>{
     if(user){
-      if(user.email===ADMIN_EMAIL){
-        isAdmin=true;
-        document.getElementById('adminBadge').classList.add('on');
-        document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
+      // Check 7-day session expiry
+      const ts=parseInt(localStorage.getItem(SESS_KEY)||'0');
+      if(ts && (Date.now()-ts) > SESS_MS){
+        localStorage.removeItem(SESS_KEY);
+        await firebase.auth().signOut();
+        showLoginGate(); return;
       }
       startListening();
     } else {
@@ -725,7 +730,6 @@ function checkAccess(){
 async function doAccess(){
   const pw=document.getElementById('accessInput').value.trim();
   if(!pw) return;
-  // Try user login, then admin login
   const emails=[USER_EMAIL, ADMIN_EMAIL];
   let success=false;
   for(const email of emails){
@@ -739,9 +743,9 @@ async function doAccess(){
     document.getElementById('accessInput').value='';
     setTimeout(()=>document.getElementById('accessInput').focus(),50);
   } else {
+    localStorage.setItem(SESS_KEY, Date.now());
     document.getElementById('accessOverlay').classList.remove('on');
     document.getElementById('loadOverlay').classList.add('on');
-    // onAuthStateChanged will fire and call startListening
   }
 }
 
@@ -752,9 +756,9 @@ async function toggleAdmin(){
     isAdmin=false;
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
-    render();toast('Exited admin mode');
+    render(); toast('Exited admin mode');
   } else {
-    // Escalate: verify admin password via secondary Firebase app (no session change)
+    // Escalate: verify via secondary Firebase app, no session change
     openModal('Enter admin code','',async v=>{
       const pw=v.trim(); if(!pw) return;
       try{
@@ -896,13 +900,10 @@ function makeCalendar(initSel, onSelChange){
   function updateClasses(){
     el.querySelectorAll('.cal-cell[data-iso]').forEach(c=>{
       const iso=c.dataset.iso;
-      const isStart=iso===selStart,isEnd=iso===(selEnd||selStart);
-      const inRange=selStart&&selEnd&&iso>selStart&&iso<selEnd;
-      const inHover=phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate;
-      c.classList.toggle('c-start',!!isStart);
-      c.classList.toggle('c-end',!!(isEnd&&selEnd&&selEnd!==selStart));
-      c.classList.toggle('c-range',!!inRange);
-      c.classList.toggle('c-hover',!!inHover);
+      c.classList.toggle('c-start', iso===selStart);
+      c.classList.toggle('c-end', !!(iso===(selEnd||selStart)&&selEnd&&selEnd!==selStart));
+      c.classList.toggle('c-range', !!(selStart&&selEnd&&iso>selStart&&iso<selEnd));
+      c.classList.toggle('c-hover', !!(phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate));
     });
   }
 
