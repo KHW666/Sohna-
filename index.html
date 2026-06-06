@@ -23,7 +23,6 @@
 html,body{background:var(--paper);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-size:15px}
 body{padding:28px 18px 80px;line-height:1.6}
 .page{max-width:1280px;margin:0 auto}
-
 header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
 h1{font-family:"Noto Serif TC",serif;font-weight:700;font-size:27px;letter-spacing:1px;display:flex;align-items:center;gap:10px}
 h1 .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);display:inline-block}
@@ -38,8 +37,6 @@ h1 .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);displa
 .badge.on{display:inline-flex}
 .section-title{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600;margin:32px 0 12px;display:flex;align-items:center;gap:8px}
 .section-title .dot2{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
-
-/* Tables */
 .tablewrap{background:var(--card);border:1px solid var(--line-strong);border-radius:14px;overflow-x:auto;box-shadow:0 1px 0 #fff inset}
 table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:15px}
 th,td{border:1px solid var(--line);vertical-align:middle;text-align:center;padding:0}
@@ -54,11 +51,7 @@ th.date.today .d{color:var(--accent)}
 th.date.today{background:var(--accent-soft)}
 th.date.yest .d{color:var(--faint)}
 th.date.blkd{background:var(--blocked)}
-th.date.blkd .d,.th.date.blkd .w{color:var(--faint)}
-th.date.weekend{background:#f5f2eb}
-th.date.weekend .d{color:var(--muted)}
-
-/* Person column */
+th.date.blkd .d,th.date.blkd .w{color:var(--faint)}
 td.person{background:#fbf8f1;vertical-align:middle}
 .phead{padding:14px 12px;cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;gap:3px}
 .pname{display:flex;align-items:center;gap:6px;font-weight:700;font-size:16px;justify-content:center}
@@ -72,62 +65,47 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .mbtn svg{width:13px;height:13px}
 .mbtn.danger{color:var(--danger);border-color:#e3b8b3}
 .mbtn.danger:hover{background:var(--danger-soft)}
-
-/* Data cells */
-.cell{padding:10px 8px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative}
+.cell{padding:10px 8px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative}
 .cell.blkd{background:var(--blocked);cursor:pointer}
 .cell.blkd:hover .blocked-msg{filter:brightness(.95)}
 .blocked-msg{font-size:13px;color:var(--faint);font-style:italic;text-align:center;user-select:none}
 .cell-weekend{font-size:32px;line-height:1;cursor:pointer;user-select:none;text-align:center}
-
-/* Flash overlay */
 .flash-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px;background:rgba(227,240,232,0.96);border-radius:inherit;z-index:10;font-size:14px;font-weight:700;color:var(--accent-ink);text-align:center;line-height:1.5;animation:fadein .3s ease;cursor:default}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
-
-/* Prompt button */
 .cell-prompt{background:var(--accent-soft);color:var(--accent-ink);border:1px dashed #9fcfb5;border-radius:10px;padding:10px 12px;cursor:pointer;font-size:13.5px;font-weight:500;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;font-family:inherit;width:100%}
 .cell-prompt:hover{background:#d0eadb;border-style:solid}
 .cell-prompt svg{width:15px;height:15px;flex-shrink:0}
-
+.cell-addr-line{font-size:11px;color:var(--accent-ink);text-align:center;background:var(--accent-soft);border-radius:6px;padding:2px 8px;width:100%;word-break:break-word}
 /* Scroll time picker */
 .tp-wrap{display:flex;align-items:center;gap:0;background:#fff;border:1.5px solid var(--line-strong);border-radius:14px;padding:4px 6px;width:152px;flex-shrink:0}
 .sp-col-outer{display:flex;flex-direction:column;align-items:center;gap:0;width:56px}
 .sp-arrow{font-family:inherit;font-size:10px;cursor:pointer;background:none;border:none;color:var(--faint);padding:1px 5px;border-radius:6px;line-height:1;transition:.1s;user-select:none}
 .sp-arrow:hover{background:var(--accent-soft);color:var(--accent-ink)}
-.sp-col{width:56px;height:132px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 28%,black 72%,transparent 100%);
-  mask-image:linear-gradient(to bottom,transparent 0%,black 28%,black 72%,transparent 100%);}
+.sp-col{width:56px;height:132px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 28%,black 72%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 28%,black 72%,transparent 100%);}
 .sp-col::-webkit-scrollbar{display:none}
 .sp-item{height:44px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif TC",serif;font-size:22px;scroll-snap-align:center;cursor:pointer;color:var(--faint);transition:color .15s,font-size .15s}
 .sp-item.sel{color:var(--ink);font-size:26px;font-weight:700}
 .tp-sep{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:700;color:var(--ink);padding:0 2px;flex-shrink:0;margin-bottom:4px}
-
-/* Saved time display */
 .time-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
-.time-badge{background:var(--accent);color:#fff;border-radius:10px;padding:6px 16px;font-size:18px;font-weight:700;font-family:"Noto Serif TC",serif;letter-spacing:1px;line-height:1.2;cursor:pointer}
-.time-badge:hover{background:var(--accent-ink)}
-.cell-btn{font-family:inherit;font-size:12px;cursor:pointer;border-radius:8px;padding:5px 11px;border:1.5px solid;display:inline-flex;align-items:center;gap:4px;font-weight:600;transition:.13s}
-.cell-btn.edit-time{background:#fff;color:var(--accent-ink);border-color:#9fcfb5;font-size:12px}
-.cell-btn.edit-time:hover{background:var(--accent-soft)}
-
-/* Special address in cell */
-.cell-addr{font-size:12px;color:var(--accent-ink);background:var(--accent-soft);border-radius:7px;padding:3px 9px;text-align:center;display:flex;align-items:center;gap:4px;justify-content:center;max-width:100%;word-break:break-word;line-height:1.4}
-
-/* Admin info in cell */
+.time-badge{background:var(--accent);color:#fff;border-radius:10px;padding:6px 16px;font-size:18px;font-weight:700;font-family:"Noto Serif TC",serif;letter-spacing:1px;line-height:1.2}
+/* Cell modal addr */
+.cm-addr-btn{font-family:inherit;font-size:12px;cursor:pointer;background:transparent;border:1px dashed var(--line-strong);border-radius:8px;padding:8px 12px;color:var(--muted);width:100%;text-align:center;transition:.13s;margin-top:10px;line-height:1.4}
+.cm-addr-btn:hover{background:var(--accent-soft);color:var(--accent-ink);border-color:#9fcfb5}
+.cm-addr-saved{font-size:13px;color:var(--accent-ink);background:var(--accent-soft);border-radius:8px;padding:8px 12px;cursor:pointer;margin-top:10px;word-break:break-word;text-align:center}
+.cm-addr-saved:hover{background:#d0eadb}
+.cm-addr-input{width:100%;border:1.5px solid var(--accent);border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff;margin-top:10px}
+.cm-addr-input:focus{outline:none}
 .admininfo{border-top:1px dashed var(--line-strong);padding-top:6px;display:flex;flex-direction:column;gap:4px;width:100%}
 .arow{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);justify-content:center}
 .arow svg{width:14px;height:14px;flex-shrink:0;color:var(--accent)}
 .plate{background:var(--amber-soft);color:var(--amber);border:1px solid #e8d6a8;border-radius:6px;padding:1px 7px;font-weight:600;letter-spacing:.5px;font-size:12.5px}
-.tel-link{color:var(--accent);text-decoration:none;font-weight:600}
+.tel-link{color:var(--accent-ink);text-decoration:none;font-weight:600}
 .tel-link:hover{text-decoration:underline}
-
 .addrow td{background:#fbf8f1}
 .addperson{width:calc(100% - 18px);margin:9px;background:transparent;border:1px dashed var(--line-strong);border-radius:9px;color:var(--muted);font-size:14px;padding:10px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
 .addperson:hover{background:#fff;color:var(--ink);border-color:var(--muted)}
 .addperson svg{width:14px;height:14px}
 .empty-row{padding:40px 16px;text-align:center;color:var(--faint);font-size:14px}
-
-/* Import section */
 #importSection{display:none}
 #importSection.on{display:block}
 #paste-grid{table-layout:auto}
@@ -136,10 +114,15 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .paste-phead{padding:12px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .paste-pname{font-weight:700;font-size:15px}
 .paste-paddr{font-size:11.5px;color:var(--muted);text-align:center;word-break:break-word;max-width:140px}
-.paste-cell{padding:8px;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.paste-cell{padding:8px;min-height:150px;display:flex;flex-direction:column;gap:6px}
 .paste-cell.blkd{background:var(--blocked)}
-
-/* Holiday section */
+.paste-area{border:1px dashed var(--line-strong);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff;padding:7px 9px;resize:both;min-height:90px;width:100%}
+.paste-area:focus{outline:none;border-color:var(--accent);border-style:solid}
+.paste-area.has-error{border-color:var(--danger);border-style:solid;background:var(--danger-soft)}
+.paste-success{background:#e6f5ec;color:#1a6b3a;border:1px solid #b0ddc0;border-radius:8px;padding:8px 12px;font-size:13.5px;font-weight:700;text-align:center}
+.paste-err-list{background:var(--danger-soft);color:var(--danger);border:1px solid #e3b8b3;border-radius:8px;padding:8px 12px;font-size:13px;line-height:2}
+.paste-clearbtn{font-family:inherit;font-size:13px;cursor:pointer;background:#fff;border:1.5px solid var(--line-strong);border-radius:8px;padding:7px 18px;color:var(--muted);font-weight:500;align-self:flex-start}
+.paste-clearbtn:hover{border-color:var(--danger);color:var(--danger)}
 #holidaySection{display:none;margin-top:32px}
 #holidaySection.on{display:block}
 .hol-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
@@ -151,7 +134,16 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .hol-del:hover{background:var(--danger-soft)}
 .add-holiday{width:100%;background:transparent;border:1px dashed var(--line-strong);border-radius:9px;color:var(--muted);font-size:14px;padding:10px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
 .add-holiday:hover{background:#fff;color:var(--ink);border-color:var(--muted)}
-
+/* WA settings */
+#waSection{display:none;margin-top:32px}
+#waSection.on{display:block}
+.wa-entry{background:var(--card);border:1px solid var(--line-strong);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.wa-entry-info{flex:1;font-size:13px}
+.wa-entry-ph{font-weight:600;color:var(--ink)}
+.wa-entry-key{color:var(--muted);font-size:12px;margin-top:1px;word-break:break-all}
+.wa-field-input{font-family:inherit;font-size:13px;border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;color:var(--ink);background:#fff;flex:1;min-width:120px}
+.wa-field-input:focus{outline:none;border-color:var(--accent)}
+.wa-hint{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.7}
 /* Calendar */
 .cal-wrap{padding:4px 0 12px}
 .cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -169,77 +161,81 @@ td.person{background:#fbf8f1;vertical-align:middle}
 .cal-cell.c-range,.cal-cell.c-hover{background:var(--accent-soft);color:var(--accent-ink)}
 .cal-cell.c-today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--accent)}
 .cal-sel-text{font-size:13px;color:var(--muted);margin-top:10px;min-height:20px;text-align:center}
-
 /* Modals */
 .overlay{position:fixed;inset:0;background:rgba(30,26,20,.4);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
 .overlay.on{display:flex}
 .modal{background:var(--card);border:1px solid var(--line-strong);border-radius:14px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 50px rgba(0,0,0,.18)}
 .modal.wide{max-width:380px}
 .modal h3{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:600;margin-bottom:16px}
-.modal input{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:11px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;margin-bottom:16px}
+.modal input[type=text],.modal input[type=password]{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:11px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;margin-bottom:16px}
 .modal input:focus{outline:none;border-color:var(--accent)}
 .modal .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
-
-/* Access gate */
-#accessOverlay{z-index:100;background:var(--paper)}
-#accessOverlay .modal{text-align:center}
-#accessOverlay .modal h3{font-size:20px;margin-bottom:6px}
-#accessInput{text-align:center;letter-spacing:2px}
-
-/* Loading overlay */
+#accessOverlay{z-index:100;background:#000}
+#accessOverlay .modal{text-align:center;background:transparent;border:none;box-shadow:none}
+#accessOverlay .modal h3{font-size:36px;margin-bottom:20px;color:#fff;font-family:"Noto Serif TC",serif}
+#accessInput{text-align:center;letter-spacing:4px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:12px}
+#accessInput::placeholder{color:rgba(255,255,255,.3)}
+#accessOverlay .btn.primary{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff}
+#accessOverlay .btn.primary:hover{background:rgba(255,255,255,.25)}
 #loadOverlay{z-index:95;background:var(--paper)}
 #loadOverlay .modal{text-align:center;border:none;background:transparent;box-shadow:none}
 .load-spinner{width:36px;height:36px;border:3px solid var(--line-strong);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Sync indicator */
 #syncDot{width:9px;height:9px;border-radius:50%;background:#b0b0a8;display:inline-block;margin-left:8px;vertical-align:middle;transition:background .3s}
 #syncDot.saving{background:#d4a017;animation:pulse 1s infinite}
 #syncDot.synced{background:#22c55e;animation:popGreen .5s ease forwards}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes popGreen{0%{transform:scale(1.5);background:#22c55e}100%{transform:scale(1);background:#22c55e}}
-
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;transition:.25s;z-index:200;pointer-events:none}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ── Cell Modal ── */
-#cellModal{z-index:70}
-#cellModal .modal{padding:0;overflow:hidden;max-width:420px}
-.cm-header{padding:18px 22px 14px;border-bottom:1px solid var(--line)}
-.cm-name{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:700}
-.cm-date{font-size:13px;color:var(--muted);margin-top:3px}
-.cm-body{padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:14px;justify-content:center;overflow-y:auto;max-height:70vh}
-.cm-footer{padding:14px 18px;display:flex;gap:10px;border-top:1px solid var(--line);background:#f8f5ef}
-.cm-footer button{flex:1;padding:14px 8px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:.15s}
-.cm-exit{background:#f97316;color:#fff}.cm-exit:hover{background:#ea6c0a}
-.cm-delete{background:var(--danger);color:#fff}.cm-delete:hover{background:#8b2b24}
-.cm-save{background:#22c55e;color:#fff}.cm-save:hover{background:#16a34a}
-
-/* Special address in modal */
-.sp-addr-btn{font-family:inherit;font-size:13.5px;cursor:pointer;background:var(--accent-soft);color:var(--accent-ink);border:1px dashed #9fcfb5;border-radius:10px;padding:10px 16px;width:100%;max-width:300px;transition:.15s;display:flex;align-items:center;justify-content:center;gap:7px}
-.sp-addr-btn:hover{background:#d0eadb;border-style:solid}
-.sp-addr-btn.filled{border-style:solid;background:#d0eadb}
-.sp-addr-input{width:100%;max-width:300px;border:1.5px solid var(--accent);border-radius:10px;padding:11px 14px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff}
-.sp-addr-input:focus{outline:none}
-
-/* Driver info modal fields */
-.cm-field{width:100%;display:flex;flex-direction:column;gap:5px}
-.cm-field label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.cm-field input{width:100%;border:1.5px solid var(--line-strong);border-radius:8px;padding:11px 13px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
-.cm-field input:focus{outline:none;border-color:var(--accent)}
-.cm-paste-area{width:100%;border:1.5px dashed var(--line-strong);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff;padding:10px 12px;resize:vertical;min-height:100px}
-.cm-paste-area:focus{outline:none;border-color:var(--accent);border-style:solid}
-.cm-divider{display:flex;align-items:center;gap:10px;width:100%;color:var(--faint);font-size:12px}
-.cm-divider::before,.cm-divider::after{content:'';flex:1;height:1px;background:var(--line)}
-.cm-errors{background:var(--danger-soft);color:var(--danger);border:1px solid #e3b8b3;border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.9;width:100%}
-.cm-ok{background:#e6f5ec;color:#1a6b3a;border:1px solid #b0ddc0;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;width:100%;text-align:center}
-
+#waBanner{position:fixed;bottom:0;left:0;right:0;background:#075e54;color:#fff;display:none;align-items:center;gap:12px;padding:14px 18px;z-index:70;box-shadow:0 -2px 16px rgba(0,0,0,.25)}
+#waBanner.on{display:flex}
+.wa-icon{font-size:26px;flex-shrink:0}
+.wa-msg{flex:1;min-width:0}
+.wa-msg strong{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-msg span{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.wa-btn{font-family:inherit;font-size:13px;cursor:pointer;background:#25d366;border:none;border-radius:20px;padding:8px 16px;color:#fff;font-weight:700;flex-shrink:0;white-space:nowrap}
+.wa-btn:hover{background:#1da851}
+.wa-close{font-family:inherit;font-size:22px;line-height:1;cursor:pointer;background:none;border:none;color:rgba(255,255,255,.7);padding:0 4px;flex-shrink:0}
+.wa-close:hover{color:#fff}
+@media(max-width:520px){#waBanner{flex-wrap:wrap}.wa-msg{order:-1;width:100%}}
 @media(max-width:680px){h1{font-size:20px}body{padding:14px 8px 60px}}
+/* Driver info modal */
+.dm-field-row{margin-bottom:12px}
+.dm-field-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:4px}
+.dm-field-input{width:100%;border:1.5px solid var(--line-strong);border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff}
+.dm-field-input:focus{outline:none;border-color:var(--accent)}
+.dm-textarea{width:100%;border:1.5px solid var(--line-strong);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff;resize:vertical;min-height:110px;margin-top:14px}
+.dm-textarea:focus{outline:none;border-color:var(--accent)}
+.dm-cell-info{display:flex;flex-direction:column;gap:4px;width:100%;font-size:13px;padding:8px 6px}
+.dm-cell-empty{color:var(--faint);font-size:13px;font-style:italic;text-align:center;padding:8px}
+.dm-cell-empty:hover{color:var(--accent)}
+/* Driver modal errors */
+#dmErrors{margin-top:10px}
+.dm-err-item{background:var(--danger-soft);color:var(--danger);border:1px solid #e3b8b3;border-radius:7px;padding:6px 10px;font-size:12.5px;margin-bottom:4px}
+#dmSaveBtn:disabled{opacity:.45;cursor:not-allowed}
+/* Badminton toggle */
+.cm-badminton-btn{font-family:inherit;font-size:12px;cursor:pointer;background:transparent;border:1px dashed #9fcfb5;border-radius:8px;padding:8px 12px;color:var(--accent-ink);width:100%;text-align:center;transition:.13s;margin-top:8px}
+.cm-badminton-btn:hover{background:var(--accent-soft)}
+.cm-badminton-on{font-family:inherit;font-size:13px;cursor:pointer;background:var(--accent-soft);border:1.5px solid #9fcfb5;border-radius:8px;padding:8px 12px;color:var(--accent-ink);width:100%;text-align:center;font-weight:600;margin-top:8px}
+/* Date header 3rd row */
+.th-r3{font-size:13px;color:var(--accent-ink);margin-top:2px;min-height:18px}
+/* Person order */
+.porder-wrap{display:flex;align-items:center;gap:5px;margin-bottom:6px;justify-content:center}
+.porder-label{font-size:11px;color:var(--faint);font-weight:600}
+.porder-input{width:52px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 6px;font-size:12px;font-family:inherit;color:var(--ink);background:#fff;text-align:center}
+.porder-input:focus{outline:none;border-color:var(--accent)}
+/* Active users bar */
+#activeBar{display:none;background:var(--accent-soft);border:1px solid #9fcfb5;border-radius:10px;padding:10px 18px;margin-bottom:18px;font-size:13px;color:var(--accent-ink);align-items:center;gap:10px}
+#activeBar.on{display:flex}
 </style>
 </head>
 <body>
 <div class="page">
-
+  <div id="activeBar">
+    <span style="font-size:18px">👥</span>
+    <span id="activeCount">–</span>
+  </div>
   <header class="top">
     <div>
       <h1><span class="dot"></span>Sohna Vehicle Booking System<span id="syncDot" title="Synced"></span></h1>
@@ -255,28 +251,23 @@ td.person{background:#fbf8f1;vertical-align:middle}
       </button>
     </div>
   </header>
-
   <p class="sub">
     · Click your name to set up your info<br>
-    · Add pickup times in date<br>
+    · Click a date cell to set your pickup time<br>
     · Driver info will be shared by 11pm the night before
   </p>
-
   <div class="section-title"><span class="dot2"></span>Schedule</div>
   <div class="tablewrap" id="schedWrap">
     <table id="grid"><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table>
   </div>
-
-  <!-- Admin only -->
   <div id="importSection">
     <div class="section-title" style="margin-top:40px">
       <span class="dot2"></span>Driver Info
-      <span style="font-size:13px;color:var(--muted);font-family:sans-serif;font-weight:400;margin-left:4px">— Click a cell to enter driver info</span>
+      <span style="font-size:13px;color:var(--muted);font-family:sans-serif;font-weight:400;margin-left:4px">— Paste booking confirmation and validate</span>
     </div>
     <div class="tablewrap" id="pasteWrap">
       <table id="paste-grid"><thead><tr id="paste-head"></tr></thead><tbody id="paste-body"></tbody></table>
     </div>
-
     <div id="holidaySection" class="on">
       <div class="section-title" style="margin-top:36px"><span class="dot2"></span>Holiday</div>
       <div class="hol-list" id="holList"></div>
@@ -285,29 +276,31 @@ td.person{background:#fbf8f1;vertical-align:middle}
         Add Holiday
       </button>
     </div>
+    <div id="waSection">
+      <div class="section-title" style="margin-top:36px"><span class="dot2"></span>WhatsApp Inform Setting</div>
+      <div id="waList"></div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <input id="waPhoneInput" class="wa-field-input" placeholder="Phone e.g. 6512345678" type="text">
+        <input id="waKeyInput" class="wa-field-input" placeholder="CallMeBot API Key" type="text">
+        <button class="btn primary" onclick="addWaNotify()" style="white-space:nowrap">+ Add</button>
+      </div>
+      <p class="wa-hint"><a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--accent-ink);font-weight:600">Please click here to learn how to setup</a></p>
+    </div>
   </div>
-
 </div>
 
 <!-- Loading overlay -->
 <div class="overlay on" id="loadOverlay">
-  <div class="modal">
-    <div class="load-spinner"></div>
-    <p style="color:var(--muted);font-size:14px">Connecting…</p>
-  </div>
+  <div class="modal"><div class="load-spinner"></div><p style="color:var(--muted);font-size:14px">Connecting&#x2026;</p></div>
 </div>
-
 <!-- Access gate -->
 <div class="overlay" id="accessOverlay">
   <div class="modal">
     <h3>Hi</h3>
     <input id="accessInput" type="password" autocomplete="off" placeholder="">
-    <div class="acts" style="justify-content:center">
-      <button class="btn primary" onclick="doAccess()">Enter</button>
-    </div>
+    <div class="acts" style="justify-content:center"><button class="btn primary" onclick="doAccess()">Enter</button></div>
   </div>
 </div>
-
 <!-- Generic modal -->
 <div class="overlay" id="overlay">
   <div class="modal">
@@ -319,7 +312,6 @@ td.person{background:#fbf8f1;vertical-align:middle}
     </div>
   </div>
 </div>
-
 <!-- Calendar modal -->
 <div class="overlay" id="calOverlay">
   <div class="modal wide">
@@ -332,158 +324,200 @@ td.person{background:#fbf8f1;vertical-align:middle}
     </div>
   </div>
 </div>
-
-<!-- Cell modal -->
+<!-- Cell modal (user pickup time + address) -->
 <div class="overlay" id="cellModal">
-  <div class="modal" style="padding:0;overflow:hidden;max-width:420px">
-    <div class="cm-header">
-      <div class="cm-name" id="cmName"></div>
-      <div class="cm-date" id="cmDate"></div>
-    </div>
-    <div class="cm-body" id="cmBody"></div>
-    <div class="cm-footer">
-      <button class="cm-exit" onclick="closeCellModal()">Exit</button>
-      <button class="cm-delete" id="cmDeleteBtn" onclick="if(cmDeleteFn)cmDeleteFn()">Delete</button>
-      <button class="cm-save" onclick="if(cmSaveFn)cmSaveFn()">Save</button>
+  <div class="modal">
+    <h3 id="cmTitle" style="font-size:15px;margin-bottom:14px">&#x2013;</h3>
+    <div id="cmPickerWrap" style="display:flex;justify-content:center"></div>
+    <div id="cmAddrWrap"></div>
+    <div id="cmBadmintonWrap"></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:18px">
+      <button class="btn" id="cmDelBtn" style="color:var(--danger);border-color:#e3b8b3;display:none" onclick="deleteCellTime()">Delete</button>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="closeCellModal()">Cancel</button>
+      <button class="btn primary" onclick="saveCellModal()">Save</button>
     </div>
   </div>
 </div>
-
+<!-- Date note modal (admin) -->
+<div class="overlay" id="dateModal">
+  <div class="modal">
+    <h3 id="dtTitle" style="font-size:15px;margin-bottom:10px">Date Notes</h3>
+    <div id="dtBadmintonInfo" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
+    <div style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:4px">NOTE / LABEL</div>
+    <input id="dtNoteInput" type="text" style="width:100%;border:1.5px solid var(--line-strong);border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff" placeholder="Add a note for this date…">
+    <div style="display:flex;gap:10px;align-items:center;margin-top:18px">
+      <button class="btn" id="dtClearBtn" style="color:var(--danger);border-color:#e3b8b3;display:none" onclick="clearDateNote()">Clear</button>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="closeDateModal()">Cancel</button>
+      <button class="btn primary" onclick="saveDateModal()">Save</button>
+    </div>
+  </div>
+</div>
+<!-- Driver info modal (admin) -->
+<div class="overlay" id="driverModal">
+  <div class="modal wide">
+    <h3 id="dmTitle" style="font-size:15px;margin-bottom:14px">&#x2013;</h3>
+    <div class="dm-field-row">
+      <div class="dm-field-label">VEHICLE NUMBER</div>
+      <input id="dmVehicle" class="dm-field-input" type="text" placeholder="e.g. SGX1234A">
+    </div>
+    <div class="dm-field-row">
+      <div class="dm-field-label">CHAUFFEUR</div>
+      <input id="dmChauffeur" class="dm-field-input" type="text" placeholder="Driver name">
+    </div>
+    <div class="dm-field-row">
+      <div class="dm-field-label">MOBILE NO</div>
+      <input id="dmMobile" class="dm-field-input" type="text" placeholder="e.g. +65 9123 4567">
+    </div>
+    <textarea id="dmRawText" class="dm-textarea" placeholder="Paste full booking confirmation here — fields above will auto-fill…"></textarea>
+    <div id="dmErrors"></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:18px">
+      <button class="btn" id="dmDelBtn" style="color:var(--danger);border-color:#e3b8b3;display:none" onclick="deleteDriverInfo()">Delete</button>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="closeDriverModal()">Exit</button>
+      <button class="btn primary" id="dmSaveBtn" onclick="saveDriverModal()">Save</button>
+    </div>
+  </div>
+</div>
+<!-- WhatsApp banner -->
+<div id="waBanner">
+  <div class="wa-icon">&#x1F4AC;</div>
+  <div class="wa-msg">
+    <strong id="waBannerTitle"></strong>
+    <span id="waBannerSub"></span>
+  </div>
+  <button class="wa-btn" onclick="openWA()">Open WhatsApp</button>
+  <button class="wa-close" onclick="dismissWA()" title="Dismiss">&#xD7;</button>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Firebase ──
-const FB_CFG = {
-  apiKey: "AIzaSyDc3y0BWxLRqeA7pr9cLga-oXdstO2T2qs",
-  authDomain: "sohna-80f5f.firebaseapp.com",
-  databaseURL: "https://sohna-80f5f-default-rtdb.firebaseio.com",
-  projectId: "sohna-80f5f",
-  storageBucket: "sohna-80f5f.firebasestorage.app",
-  messagingSenderId: "511763453474",
-  appId: "1:511763453474:web:f08599365265b059b95c7b"
-};
-const fbApp  = firebase.initializeApp(FB_CFG);
-const fbApp2 = firebase.initializeApp(FB_CFG, 'verify');
-const db     = firebase.database();
-const dbRef  = db.ref('sohna');
+const FB_CFG={apiKey:"AIzaSyDc3y0BWxLRqeA7pr9cLga-oXdstO2T2qs",authDomain:"sohna-80f5f.firebaseapp.com",databaseURL:"https://sohna-80f5f-default-rtdb.firebaseio.com",projectId:"sohna-80f5f",storageBucket:"sohna-80f5f.firebasestorage.app",messagingSenderId:"511763453474",appId:"1:511763453474:web:f08599365265b059b95c7b"};
+const fbApp=firebase.initializeApp(FB_CFG);
+const fbApp2=firebase.initializeApp(FB_CFG,'verify');
+const db=firebase.database();
+const dbRef=db.ref('sohna');
 
-// ── Constants ──
-const ADMIN_EMAIL = 'admin@sohna.local';
-const USER_EMAIL  = 'user@sohna.local';
-const SESS_KEY    = 'sohna_ts';
-const SESS_MS     = 7 * 24 * 60 * 60 * 1000;
+const ADMIN_EMAIL='admin@sohna.local';
+const USER_EMAIL='user@sohna.local';
+const LS_AUTH='sohna_auth_ts';
+const LS_ADM='sohna_admin_ts';
+const SESSION_MS=7*24*60*60*1000;
+function lsGet(k){try{return parseInt(localStorage.getItem(k)||'0');}catch{return 0;}}
+function lsSet(k){try{localStorage.setItem(k,Date.now().toString());}catch{}}
+function lsDel(k){try{localStorage.removeItem(k);}catch{}}
+function sessionOK(k){const t=lsGet(k);return t>0&&(Date.now()-t)<SESSION_MS;}
+const FLASH_MSGS=['Stay home, Stay safe','Enjoy your AC at home','Please contact Mr No','Highly suggest WFH','Unplanned downtime (this system)',"Round out the jokes, pls don't click again",'👋🏻😁','🫵🏻🫥'];
 
-const FLASH_MSGS = [
-  'Stay home, Stay safe',
-  'Enjoy your AC at home',
-  'Please contact Mr No',
-  'Highly suggest WFH',
-  'Unplanned downtime (this system)',
-  'Round out the jokes, pls don\'t click again',
-  '👋🏻😁','🫵🏻🫥'
-];
+let state={persons:[],addresses:{},cells:{},admin:{},holidays:[],waNotify:[],dateNotes:{},personOrder:{}};
+let isAdmin=false,modalCb=null,calPicker=null,calEditId=null,fbListening=false;
+let _waUrl='';
+let _cmState={p:null,dt:null,curH:8,curM:0,addr:'',badminton:false};
+let _dmState={p:null,iso:null};
+let _dateState={iso:null};
 
-let state       = { persons:[], addresses:{}, cells:{}, admin:{}, holidays:[] };
-let isAdmin     = false;
-let modalCb     = null;
-let calPicker   = null;
-let calEditId   = null;
-let fbListening = false;
-let cmSaveFn    = null;
-let cmDeleteFn  = null;
-
-const I = {
-  chev:  '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>',
-  pin:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
-  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>',
-  plus:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-  user:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
-  car:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="8" rx="3"/><path d="M5 10l2.5-4h9l2.5 4"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M9 10h6"/></svg>',
-  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="17" r="1" fill="currentColor"/><path d="M9 5h6"/></svg>',
-  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
-  edit:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
+const I={
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="8" rx="3"/><path d="M5 10l2.5-4h9l2.5 4"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M9 10h6"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="17" r="1" fill="currentColor"/><path d="M9 5h6"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
 };
 
-function esc(s){ return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function jsesc(s){ return (s+'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
-function ckey(p,iso){ return p+'|'+iso; }
-function pad2(n){ return String(n).padStart(2,'0'); }
-function genId(){ return Math.random().toString(36).slice(2,8); }
-function localISO(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
-function timeToMins(t){ if(!t)return NaN; const m=t.match(/(\d{1,2}):(\d{2})/); return m?parseInt(m[1])*60+parseInt(m[2]):NaN; }
-function stripPrefix(n){ return (n||'').replace(/^\s*(Mr\.?|Mrs\.?|Ms\.?|Miss\.?|Dr\.?|Prof\.?|Sir\.?|Mdm\.?|Madam\.?|Mx\.?)\s*/i,'').trim(); }
-function isHoliday(iso){ return (state.holidays||[]).some(h=>iso>=h.start&&iso<=(h.end||h.start)); }
-function fmtHolRange(h){ return h.start===h.end?h.start:(h.start+' → '+h.end); }
+function esc(s){return(s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function jsesc(s){return(s+'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function ckey(p,iso){return p+'|'+iso;}
+function pad2(n){return String(n).padStart(2,'0');}
+function genId(){return Math.random().toString(36).slice(2,8);}
+function localISO(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function timeToMins(t){if(!t)return NaN;const m=t.match(/(\d{1,2}):(\d{2})/);return m?parseInt(m[1])*60+parseInt(m[2]):NaN;}
+function stripPrefix(n){return(n||'').replace(/^\s*(Mr\.?|Mrs\.?|Ms\.?|Miss\.?|Dr\.?|Prof\.?|Sir\.?|Mdm\.?|Madam\.?|Mx\.?)\s*/i,'').trim();}
+function isHoliday(iso){return(state.holidays||[]).some(h=>iso>=h.start&&iso<=(h.end||h.start));}
+function fmtHolRange(h){return h.start===h.end?h.start:(h.start+' → '+h.end);}
 
 function matchDate(str,col){
-  if(!str)return false; str=str.trim();
+  if(!str)return false;str=str.trim();
   const M={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
-  const cs=new Set(); const p=n=>String(n).padStart(2,'0'); let m;
-  m=str.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/); if(m)cs.add(`${m[1]}-${p(m[2])}-${p(m[3])}`);
-  m=str.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/); if(m){cs.add(`${m[3]}-${p(m[2])}-${p(m[1])}`);cs.add(`${m[3]}-${p(m[1])}-${p(m[2])}`);}
-  m=str.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/); if(m){const mo=M[m[2].toLowerCase().slice(0,3)];if(mo)cs.add(`${m[3]}-${mo}-${p(m[1])}`);}
-  m=str.match(/^([A-Za-z]{3,})\s+(\d{1,2}),?\s+(\d{4})$/); if(m){const mo=M[m[1].toLowerCase().slice(0,3)];if(mo)cs.add(`${m[3]}-${mo}-${p(m[2])}`);}
-  const d=new Date(str); if(!isNaN(d))cs.add(localISO(d));
+  const cs=new Set();const p=n=>String(n).padStart(2,'0');let m;
+  m=str.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);if(m)cs.add(m[1]+'-'+p(m[2])+'-'+p(m[3]));
+  m=str.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/);if(m){cs.add(m[3]+'-'+p(m[2])+'-'+p(m[1]));cs.add(m[3]+'-'+p(m[1])+'-'+p(m[2]));}
+  m=str.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);if(m){const mo=M[m[2].toLowerCase().slice(0,3)];if(mo)cs.add(m[3]+'-'+mo+'-'+p(m[1]));}
+  m=str.match(/^([A-Za-z]{3,})\s+(\d{1,2}),?\s+(\d{4})$/);if(m){const mo=M[m[1].toLowerCase().slice(0,3)];if(mo)cs.add(m[3]+'-'+mo+'-'+p(m[2]));}
+  const d=new Date(str);if(!isNaN(d))cs.add(localISO(d));
   return cs.has(col);
 }
 
-// ── Normalize state ──
 function normalize(){
-  state.persons   = state.persons   || [];
-  state.addresses = state.addresses || {};
-  state.cells     = state.cells     || {};
-  state.admin     = state.admin     || {};
-  state.holidays  = state.holidays  || [];
-  if(!Array.isArray(state.persons))  state.persons  = Object.values(state.persons);
-  if(!Array.isArray(state.holidays)) state.holidays = Object.values(state.holidays);
-  Object.keys(state.cells).forEach(k=>{
-    const c=state.cells[k]; if(c.times&&c.times.length&&!c.time){c.time=c.times[0];} delete c.times;
-  });
+  state.persons=state.persons||[];
+  state.addresses=state.addresses||{};
+  state.cells=state.cells||{};
+  state.admin=state.admin||{};
+  state.holidays=state.holidays||[];
+  state.waNotify=state.waNotify||[];
+  if(!Array.isArray(state.persons))state.persons=Object.values(state.persons);
+  if(!Array.isArray(state.holidays))state.holidays=Object.values(state.holidays);
+  if(!Array.isArray(state.waNotify))state.waNotify=Object.values(state.waNotify);
+  state.dateNotes=state.dateNotes||{};
+  state.personOrder=state.personOrder||{};
+  Object.keys(state.cells).forEach(k=>{const c=state.cells[k];if(c&&c.times&&c.times.length&&!c.time){c.time=c.times[0];}if(c)delete c.times;});
 }
 
-// ── Save to Firebase ──
-let saveTimer, syncResetTimer;
+let saveTimer,syncResetTimer;
 function save(){
   const dot=document.getElementById('syncDot');
   if(dot){dot.classList.remove('synced');dot.classList.add('saving');}
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
-    dbRef.set(state)
-      .then(()=>{
-        if(dot){dot.classList.remove('saving');dot.classList.add('synced');
-          clearTimeout(syncResetTimer);syncResetTimer=setTimeout(()=>dot.classList.remove('synced'),3000);}
-      })
-      .catch(()=>{ if(dot)dot.classList.remove('saving'); toast('⚠ Sync error'); });
+    dbRef.set(state).then(()=>{if(dot){dot.classList.remove('saving');dot.classList.add('synced');clearTimeout(syncResetTimer);syncResetTimer=setTimeout(()=>dot.classList.remove('synced'),3000);}}).catch(()=>{if(dot)dot.classList.remove('saving');toast('⚠ Sync error');});
   },300);
 }
 
-// ── Load from Firebase (real-time) ──
 function startListening(){
   document.getElementById('loadOverlay').classList.remove('on');
-  if(fbListening) return;
+  if(fbListening)return;
   fbListening=true;
-  dbRef.on('value', snapshot=>{
+  initPresence();
+  dbRef.on('value',snapshot=>{
     const data=snapshot.val();
-    if(data){ state=data; normalize(); }
-    else { normalize(); }
+    if(data){state=data;normalize();}else{normalize();}
+    // Auto-restore admin session
+    if(!isAdmin&&sessionOK(LS_ADM)){
+      isAdmin=true;
+      document.getElementById('adminBadge').classList.add('on');
+      document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
+    }
     document.getElementById('loadOverlay').classList.remove('on');
-    render(); renderPasteTable(); renderHolidays();
-    bindScrollSync();
-  }, ()=>{
+    render();renderPasteTable();renderHolidays();renderWaSettings();bindScrollSync();
+  },()=>{
     document.getElementById('loadOverlay').classList.remove('on');
     toast('⚠ Cannot connect to database');
-    normalize();
-    render(); renderPasteTable(); renderHolidays();
-    bindScrollSync();
+    normalize();render();renderPasteTable();renderHolidays();renderWaSettings();bindScrollSync();
   });
 }
 
-// ── Scroll sync ──
+function initPresence(){
+  try{
+    const presRef=db.ref('sohna/presence');
+    const myRef=presRef.push();
+    db.ref('.info/connected').on('value',snap=>{
+      if(snap.val()){myRef.set(true);myRef.onDisconnect().remove();}
+    });
+    presRef.on('value',snap=>{
+      const n=snap.numChildren?snap.numChildren():0;
+      const el=document.getElementById('activeCount');
+      if(el)el.textContent=n+' user'+(n!==1?'s':'')+' currently online';
+    });
+  }catch(e){}
+}
+
 function bindScrollSync(){
-  const a=document.getElementById('schedWrap'), b=document.getElementById('pasteWrap');
-  if(!a||!b||a._syncBound)return;
-  a._syncBound=true;
-  let busy=false;
+  const a=document.getElementById('schedWrap'),b=document.getElementById('pasteWrap');
+  if(!a||!b||a._syncBound)return;a._syncBound=true;let busy=false;
   a.addEventListener('scroll',()=>{if(busy)return;busy=true;b.scrollLeft=a.scrollLeft;requestAnimationFrame(()=>busy=false);},{passive:true});
   b.addEventListener('scroll',()=>{if(busy)return;busy=true;a.scrollLeft=b.scrollLeft;requestAnimationFrame(()=>busy=false);},{passive:true});
 }
@@ -497,673 +531,513 @@ function fmtDates(){
     let cls='',d1=mmdd,d2=w[dow];
     if(i===-1){cls='yest';d1='Yesterday';d2=mmdd+' '+w[dow];}
     if(i===0){cls='today';d1='Today';d2=mmdd+' '+w[dow];}
-    // Mark Sat(6) and Sun(0) as weekend (but not override today/yest)
-    if((dow===0||dow===6)&&cls==='') cls='weekend';
     out.push({iso,d1,d2,cls,dow});
   }
   return out;
 }
 
-// ── Scroll Picker ──
-const HOURS = Array.from({length:24},(_,i)=>i);
-const MINS  = Array.from({length:12},(_,i)=>i*5);
-const ITEM_H = 44;
+const HOURS=[...Array(24)].map((_,i)=>i);
+const MINS=[...Array(12)].map((_,i)=>i*5);
+const ITEM_H=44;
 
-function makeScrollPicker(items, initVal, onChange){
-  const outer=document.createElement('div'); outer.className='sp-col-outer';
-  const upBtn=document.createElement('button'); upBtn.type='button'; upBtn.className='sp-arrow'; upBtn.textContent='▲';
-  const wrap=document.createElement('div'); wrap.className='sp-col';
-  const downBtn=document.createElement('button'); downBtn.type='button'; downBtn.className='sp-arrow'; downBtn.textContent='▼';
-
-  const padBefore=document.createElement('div'); padBefore.style.height=ITEM_H+'px'; wrap.appendChild(padBefore);
+function makeScrollPicker(items,initVal,onChange){
+  const outer=document.createElement('div');outer.className='sp-col-outer';
+  const upBtn=document.createElement('button');upBtn.type='button';upBtn.className='sp-arrow';upBtn.textContent='▲';
+  const wrap=document.createElement('div');wrap.className='sp-col';
+  const downBtn=document.createElement('button');downBtn.type='button';downBtn.className='sp-arrow';downBtn.textContent='▼';
+  const padB=document.createElement('div');padB.style.height=ITEM_H+'px';wrap.appendChild(padB);
   const els=[];
-  items.forEach(v=>{
-    const el=document.createElement('div'); el.className='sp-item'; el.textContent=pad2(v);
-    el.onclick=()=>nudge(items.indexOf(v));
-    wrap.appendChild(el); els.push(el);
-  });
-  const padAfter=document.createElement('div'); padAfter.style.height=ITEM_H+'px'; wrap.appendChild(padAfter);
-
-  function updateSel(){
-    const idx=Math.round(wrap.scrollTop/ITEM_H);
-    els.forEach((e,i)=>e.classList.toggle('sel',i===idx));
-    if(items[idx]!==undefined) onChange(items[idx]);
-  }
-  function nudge(targetIdx){
-    const clamped=Math.max(0,Math.min(items.length-1,targetIdx));
-    wrap.scrollTo({top:clamped*ITEM_H,behavior:'smooth'});
-  }
-
-  const initIdx=items.indexOf(initVal);
-  requestAnimationFrame(()=>{ wrap.scrollTop=Math.max(0,initIdx)*ITEM_H; updateSel(); });
-
-  let scrollTimer;
-  wrap.addEventListener('scroll',()=>{
-    clearTimeout(scrollTimer);
-    scrollTimer=setTimeout(()=>{
-      const idx=Math.max(0,Math.min(items.length-1,Math.round(wrap.scrollTop/ITEM_H)));
-      wrap.scrollTo({top:idx*ITEM_H,behavior:'smooth'});
-      updateSel();
-    },150);
-    updateSel();
-  },{passive:true});
-  wrap.addEventListener('wheel',e=>{
-    e.preventDefault();
-    wrap.scrollTop += Math.sign(e.deltaY) * ITEM_H * 0.4;
-  },{passive:false});
-
-  upBtn.onclick = ()=>nudge(Math.round(wrap.scrollTop/ITEM_H)-1);
-  downBtn.onclick = ()=>nudge(Math.round(wrap.scrollTop/ITEM_H)+1);
-  outer.appendChild(upBtn); outer.appendChild(wrap); outer.appendChild(downBtn);
+  items.forEach(v=>{const el=document.createElement('div');el.className='sp-item';el.textContent=pad2(v);el.onclick=()=>nudge(items.indexOf(v));wrap.appendChild(el);els.push(el);});
+  const padA=document.createElement('div');padA.style.height=ITEM_H+'px';wrap.appendChild(padA);
+  function updateSel(){const idx=Math.round(wrap.scrollTop/ITEM_H);els.forEach((e,i)=>e.classList.toggle('sel',i===idx));if(items[idx]!==undefined)onChange(items[idx]);}
+  function nudge(ti){wrap.scrollTo({top:Math.max(0,Math.min(items.length-1,ti))*ITEM_H,behavior:'smooth'});}
+  const ii=items.indexOf(initVal);
+  requestAnimationFrame(()=>{wrap.scrollTop=Math.max(0,ii)*ITEM_H;updateSel();});
+  let st;
+  wrap.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{const idx=Math.max(0,Math.min(items.length-1,Math.round(wrap.scrollTop/ITEM_H)));wrap.scrollTo({top:idx*ITEM_H,behavior:'smooth'});updateSel();},150);updateSel();},{passive:true});
+  wrap.addEventListener('wheel',e=>{e.preventDefault();wrap.scrollTop+=Math.sign(e.deltaY)*ITEM_H*0.4;},{passive:false});
+  upBtn.onclick=()=>nudge(Math.round(wrap.scrollTop/ITEM_H)-1);
+  downBtn.onclick=()=>nudge(Math.round(wrap.scrollTop/ITEM_H)+1);
+  outer.appendChild(upBtn);outer.appendChild(wrap);outer.appendChild(downBtn);
   return outer;
 }
 
 // ── Flash messages ──
-const JOKE_MSG = 'Round out the jokes, pls don\'t click again';
-const _flashCounts = new WeakMap();
-let _flashIdx = -1;
-function showFlash(cellEl, fixedMsg){
-  const old=cellEl.querySelector('.flash-overlay');
-  if(old){clearTimeout(old._timer);old.remove();}
+const JOKE_MSG="Round out the jokes, pls don't click again";
+const _flashCounts=new WeakMap();
+let _flashIdx=-1;
+function showFlash(cellEl,fixedMsg){
+  const old=cellEl.querySelector('.flash-overlay');if(old){clearTimeout(old._timer);old.remove();}
   let msg;
-  if(fixedMsg){
-    msg=fixedMsg;
-  } else {
-    const count=(_flashCounts.get(cellEl)||0)+1;
-    _flashCounts.set(cellEl,count);
-    if(count>=3){ msg=JOKE_MSG; }
-    else{
-      const pool=FLASH_MSGS.filter(m=>m!==JOKE_MSG);
-      let next;
-      do{next=Math.floor(Math.random()*pool.length);}while(pool.length>1&&next===_flashIdx);
-      _flashIdx=next; msg=pool[_flashIdx];
-    }
-  }
-  const overlay=document.createElement('div'); overlay.className='flash-overlay'; overlay.textContent=msg;
+  if(fixedMsg){msg=fixedMsg;}
+  else{const count=(_flashCounts.get(cellEl)||0)+1;_flashCounts.set(cellEl,count);if(count>=3){msg=JOKE_MSG;}else{const pool=FLASH_MSGS.filter(m=>m!==JOKE_MSG);let next;do{next=Math.floor(Math.random()*pool.length);}while(pool.length>1&&next===_flashIdx);_flashIdx=next;msg=pool[_flashIdx];}}
+  const overlay=document.createElement('div');overlay.className='flash-overlay';overlay.textContent=msg;
   cellEl.appendChild(overlay);
-  overlay._timer=setTimeout(()=>{
-    overlay.style.transition='opacity .5s'; overlay.style.opacity='0';
-    setTimeout(()=>overlay.remove(),500);
-  },5000);
+  overlay._timer=setTimeout(()=>{overlay.style.transition='opacity .5s';overlay.style.opacity='0';setTimeout(()=>overlay.remove(),500);},5000);
 }
 
-// ── Cell Modal: User (time picker + special address) ──
-function openUserCellModal(person, dt, k, savedTime){
-  const initH = savedTime ? parseInt(savedTime.split(':')[0]) : 8;
-  const initM = savedTime ? parseInt(savedTime.split(':')[1]) : 0;
-  let curH=initH, curM=initM;
-  // Load existing special address
-  let specialAddr = (state.cells[k]||{}).address || '';
-
-  document.getElementById('cmName').textContent = person;
-  document.getElementById('cmDate').textContent = dt.d1 + ' · ' + dt.d2;
-
-  const body = document.getElementById('cmBody');
-  body.innerHTML = '';
-
+// ── Cell Modal ──
+function openCellModal(p,dt){
+  const k=ckey(p,dt.iso);
+  const saved=state.cells[k]||{};
+  const t=saved.time||'';
+  const initH=t?parseInt(t.split(':')[0]):8;
+  const initM=t?parseInt(t.split(':')[1]):0;
+  _cmState={p,dt,curH:initH,curM:initM,addr:saved.address||'',badminton:saved.badminton||false};
+  document.getElementById('cmTitle').textContent=p+' \xb7 '+dt.d1+' ('+dt.d2+')';
   // Time picker
-  const tpWrap = document.createElement('div'); tpWrap.className='tp-wrap';
-  const hPicker = makeScrollPicker(HOURS, initH, v=>curH=v);
-  const sep = document.createElement('span'); sep.className='tp-sep'; sep.textContent=':';
-  const mPicker = makeScrollPicker(MINS, MINS.includes(initM)?initM:0, v=>curM=v);
-  tpWrap.appendChild(hPicker); tpWrap.appendChild(sep); tpWrap.appendChild(mPicker);
-  body.appendChild(tpWrap);
-
-  // ── Special Address section ──
-  const addrWrap = document.createElement('div');
-  addrWrap.style.cssText = 'width:100%;max-width:300px;display:flex;flex-direction:column;align-items:center';
-  let addrIdleTimer = null;
-
-  function showAddrBtn(){
-    clearTimeout(addrIdleTimer);
-    addrWrap.innerHTML = '';
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'sp-addr-btn' + (specialAddr ? ' filled' : '');
-    btn.innerHTML = '📍 ' + (specialAddr ? esc(specialAddr) : 'Click here to modify if address is not same as usual');
-    btn.onclick = showAddrInput;
-    addrWrap.appendChild(btn);
-  }
-
-  function showAddrInput(){
-    addrWrap.innerHTML = '';
-    const inp = document.createElement('input');
-    inp.type = 'text'; inp.className = 'sp-addr-input';
-    inp.value = specialAddr;
-    inp.placeholder = 'Special pickup address…';
-    // Reset idle timer on any input
-    function resetTimer(){
-      clearTimeout(addrIdleTimer);
-      addrIdleTimer = setTimeout(()=>{ specialAddr = inp.value.trim(); showAddrBtn(); }, 60000);
-    }
-    inp.addEventListener('input', ()=>{ specialAddr = inp.value; resetTimer(); });
-    inp.addEventListener('keydown', e=>{
-      resetTimer();
-      if(e.key==='Enter'){ specialAddr = inp.value.trim(); showAddrBtn(); }
-      if(e.key==='Escape'){ showAddrBtn(); }
-    });
-    addrIdleTimer = setTimeout(()=>{ specialAddr = inp.value.trim(); showAddrBtn(); }, 60000);
-    addrWrap.appendChild(inp);
-    setTimeout(()=>inp.focus(), 50);
-  }
-
-  showAddrBtn();
-  body.appendChild(addrWrap);
-
-  cmSaveFn = ()=>{
-    // Capture address from input if still open
-    const inp = addrWrap.querySelector('.sp-addr-input');
-    if(inp) specialAddr = inp.value.trim();
-    const val = pad2(curH)+':'+pad2(curM);
-    const cellData = {time: val};
-    if(specialAddr) cellData.address = specialAddr;
-    state.cells[k] = cellData;
-    save(); render(); renderPasteTable(); closeCellModal(); toast('Saved: '+val);
-  };
-  cmDeleteFn = savedTime ? ()=>{
-    clearTimeout(addrIdleTimer);
-    delete state.cells[k];
-    save(); render(); renderPasteTable(); closeCellModal(); toast('Deleted');
-  } : null;
-
-  document.getElementById('cmDeleteBtn').style.display = savedTime ? '' : 'none';
+  const pw=document.getElementById('cmPickerWrap');pw.innerHTML='';
+  const tpWrap=document.createElement('div');tpWrap.className='tp-wrap';
+  tpWrap.appendChild(makeScrollPicker(HOURS,initH,v=>_cmState.curH=v));
+  const sep=document.createElement('span');sep.className='tp-sep';sep.textContent=':';tpWrap.appendChild(sep);
+  tpWrap.appendChild(makeScrollPicker(MINS,MINS.includes(initM)?initM:0,v=>_cmState.curM=v));
+  pw.appendChild(tpWrap);
+  // Address
+  _buildCmAddr();
+  // Badminton
+  _buildCmBadminton();
+  // Delete button
+  document.getElementById('cmDelBtn').style.display=t?'':'none';
   document.getElementById('cellModal').classList.add('on');
 }
 
-// ── Cell Modal: Admin (driver info) ──
-function openAdminCellModal(person, dt, k){
-  document.getElementById('cmName').textContent = person;
-  document.getElementById('cmDate').textContent = dt.d1 + ' · ' + dt.d2;
-
-  const body = document.getElementById('cmBody');
-  body.innerHTML = '';
-  const a = state.admin[k] || {};
-
-  const fieldsData = [
-    {id:'_cmDriver', label:'Driver Name',   val:a.driver||'', placeholder:'Chauffeur name'},
-    {id:'_cmPlate',  label:'Vehicle Plate', val:a.plate||'',  placeholder:'e.g. ABC 1234'},
-    {id:'_cmMobile', label:'Mobile No.',    val:a.mobile||'', placeholder:'e.g. +65 9xxx xxxx'},
-  ];
-  fieldsData.forEach(f=>{
-    const wrap=document.createElement('div'); wrap.className='cm-field';
-    const lbl=document.createElement('label'); lbl.textContent=f.label;
-    const inp=document.createElement('input'); inp.id=f.id; inp.value=f.val; inp.placeholder=f.placeholder;
-    wrap.appendChild(lbl); wrap.appendChild(inp); body.appendChild(wrap);
-  });
-
-  const div=document.createElement('div'); div.className='cm-divider'; div.textContent='or paste booking text';
-  body.appendChild(div);
-
-  const pasteWrap=document.createElement('div'); pasteWrap.className='cm-field';
-  const pasteLbl=document.createElement('label'); pasteLbl.textContent='Booking Confirmation';
-  const ta=document.createElement('textarea'); ta.className='cm-paste-area';
-  ta.placeholder='Paste booking confirmation — fields above will be filled automatically…';
-  // Pre-fill with previously saved booking text
-  if(a.rawText) ta.value=a.rawText;
-  ta.addEventListener('input',()=>{
-    const p=parseBookingText(ta.value);
-    if(p.chauffeur)     document.getElementById('_cmDriver').value=p.chauffeur;
-    if(p.vehicleNumber) document.getElementById('_cmPlate').value=p.vehicleNumber;
-    if(p.mobileNo)      document.getElementById('_cmMobile').value=p.mobileNo;
-    const errEl=document.getElementById('_cmErrors'); if(errEl) errEl.remove();
-  });
-  pasteWrap.appendChild(pasteLbl); pasteWrap.appendChild(ta);
-  body.appendChild(pasteWrap);
-
-  const hasInfo = !!(a.driver||a.plate||a.mobile);
-
-  // Helper: show/clear error banner — appears BELOW paste area, scrolls into view
-  function showModalErrors(errors){
-    let el=document.getElementById('_cmErrors');
-    if(!el){ el=document.createElement('div'); el.id='_cmErrors'; el.className='cm-errors'; body.appendChild(el); }
-    el.innerHTML = errors.map(e=>'⚠ '+esc(e)).join('<br>');
-    requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}));
+function _buildCmAddr(){
+  const aw=document.getElementById('cmAddrWrap');aw.innerHTML='';
+  if(_cmState.addr){
+    const ad=document.createElement('div');ad.className='cm-addr-saved';
+    ad.textContent='📍 '+_cmState.addr;
+    ad.onclick=()=>_cmAddrInput();aw.appendChild(ad);
+  }else{
+    const btn=document.createElement('button');btn.type='button';btn.className='cm-addr-btn';
+    btn.textContent='Click here to modify if address is not same as usual';
+    btn.onclick=()=>_cmAddrInput();aw.appendChild(btn);
   }
-  function clearModalErrors(){
-    const el=document.getElementById('_cmErrors'); if(el) el.remove();
-    const ok=document.getElementById('_cmOk'); if(ok) ok.remove();
+}
+
+function _cmAddrInput(){
+  const aw=document.getElementById('cmAddrWrap');aw.innerHTML='';
+  const inp=document.createElement('input');inp.type='text';inp.className='cm-addr-input';
+  inp.placeholder='Enter special address…';inp.value=_cmState.addr;
+  aw.appendChild(inp);inp.focus();
+  inp.onblur=()=>{_cmState.addr=inp.value.trim();_buildCmAddr();};
+  inp.onkeydown=e=>{if(e.key==='Enter')inp.blur();};
+}
+
+function _buildCmBadminton(){
+  const bw=document.getElementById('cmBadmintonWrap');bw.innerHTML='';
+  if(_cmState.badminton){
+    const btn=document.createElement('button');btn.type='button';btn.className='cm-badminton-on';
+    btn.textContent='🏸 Playing badminton — tap to cancel';
+    btn.onclick=()=>{_cmState.badminton=false;_buildCmBadminton();};bw.appendChild(btn);
+  }else{
+    const btn=document.createElement('button');btn.type='button';btn.className='cm-badminton-btn';
+    btn.textContent='Click here if you want to play badminton';
+    btn.onclick=()=>{_cmState.badminton=true;_buildCmBadminton();};bw.appendChild(btn);
   }
+}
 
-  cmSaveFn = ()=>{
-    clearModalErrors();
-    const driver = (document.getElementById('_cmDriver').value||'').trim();
-    const plate  = (document.getElementById('_cmPlate').value||'').trim();
-    const mobile = (document.getElementById('_cmMobile').value||'').trim();
-    const pasteText = ta.value.trim();
+function saveCellModal(){
+  const {p,dt,curH,curM,addr,badminton}=_cmState;if(!p||!dt)return;
+  const k=ckey(p,dt.iso);
+  const timeVal=pad2(curH)+':'+pad2(curM);
+  const old=state.cells[k]||{};
+  const oldTime=old.time||'';
+  const oldAddr=old.address||'';
+  const cur=Object.assign({},old);
+  cur.time=timeVal;
+  if(addr){cur.address=addr;}else{delete cur.address;}
+  if(badminton){cur.badminton=true;}else{delete cur.badminton;}
+  state.cells[k]=cur;
+  closeCellModal();
+  save();render();toast('Saved: '+timeVal);
+  const timeChanged=timeVal!==oldTime;
+  const addrChanged=addr!==oldAddr;
+  if(timeChanged||addrChanged){
+    let changeDesc='';
+    if(timeChanged&&addrChanged)changeDesc='pickup time to '+timeVal+' and address to '+(addr||'(removed)');
+    else if(timeChanged)changeDesc='pickup time to '+timeVal;
+    else changeDesc='pickup address to '+(addr||'(removed)');
+    checkAndNotify(p,dt,changeDesc);
+  }
+}
 
-    // Only validate if booking text was pasted
-    if(pasteText){
-      const p=parseBookingText(pasteText);
-      const errors=[];
-      // Guest Name check
-      if(p.guestName){
-        if(stripPrefix(p.guestName).toLowerCase()!==stripPrefix(person).toLowerCase())
-          errors.push(`Guest Name mismatch: found "${p.guestName}", expected "${person}"`);
-      } else { errors.push('GUEST NAME not found in text'); }
-      // Reporting Date check
-      if(p.reportingDate){
-        if(!matchDate(p.reportingDate, dt.iso))
-          errors.push(`Reporting Date "${p.reportingDate}" does not match column date "${dt.iso}"`);
-      } else { errors.push('REPORTING DATE not found in text'); }
-      // Reporting Time vs pickup time check
-      if(p.reportingTime){
-        const userTime=(state.cells[k]||{}).time||'';
-        if(!userTime) errors.push('No pickup time set in Schedule for this cell');
-        else{
-          const rM=timeToMins(p.reportingTime), pM=timeToMins(userTime);
-          if(!isNaN(rM)&&!isNaN(pM)&&rM>pM)
-            errors.push(`Reporting Time "${p.reportingTime}" must be ≤ pickup time "${userTime}"`);
-        }
-      } else { errors.push('REPORTING TIME not found in text'); }
-
-      if(errors.length){ showModalErrors(errors); return; }
-    }
-
-    const rawText = ta.value; // preserve the original booking text
-    state.admin[k] = {driver, plate, mobile, rawText};
-    save(); render(); renderPasteTable(); closeCellModal(); toast('Driver info saved');
-  };
-  cmDeleteFn = hasInfo ? ()=>{
-    delete state.admin[k];
-    save(); render(); renderPasteTable(); closeCellModal(); toast('Deleted');
-  } : null;
-
-  document.getElementById('cmDeleteBtn').style.display = hasInfo ? '' : 'none';
-  document.getElementById('cellModal').classList.add('on');
+function deleteCellTime(){
+  const {p,dt}=_cmState;if(!p||!dt)return;
+  const k=ckey(p,dt.iso);
+  const cur=Object.assign({},state.cells[k]||{});
+  delete cur.time;delete cur.address;delete cur.badminton;
+  if(Object.keys(cur).length){state.cells[k]=cur;}else{delete state.cells[k];}
+  closeCellModal();save();render();toast('Deleted');
 }
 
 function closeCellModal(){
   document.getElementById('cellModal').classList.remove('on');
-  cmSaveFn = null; cmDeleteFn = null;
+  _cmState={p:null,dt:null,curH:8,curM:0,addr:'',badminton:false};
 }
+
+// ── WhatsApp / CallMeBot ──
+function checkAndNotify(person,dt,changeDesc){
+  const now=new Date();now.setHours(0,0,0,0);
+  const todayISO=localISO(now);
+  const tmrw=new Date(now);tmrw.setDate(now.getDate()+1);
+  const tomorrowISO=localISO(tmrw);
+  if(dt.iso!==todayISO&&dt.iso!==tomorrowISO)return;
+  const d=new Date(dt.iso+'T00:00:00');
+  const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  const msg='Attention, '+person+' updated '+dateStr+' '+changeDesc+'. Please check and update if needed.';
+  _waUrl='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('waBannerTitle').textContent=person+' \xb7 '+dateStr;
+  document.getElementById('waBannerSub').textContent=changeDesc;
+  document.getElementById('waBanner').classList.add('on');
+  sendCallMeBot(msg);
+}
+
+function sendCallMeBot(message){
+  const list=state.waNotify||[];if(!list.length)return;
+  list.forEach(r=>{fetch('https://api.callmebot.com/whatsapp.php?phone='+encodeURIComponent(r.phone)+'&text='+encodeURIComponent(message)+'&apikey='+encodeURIComponent(r.apikey),{mode:'no-cors'}).catch(()=>{});});
+}
+
+function openWA(){if(_waUrl)window.open(_waUrl,'_blank');}
+function dismissWA(){document.getElementById('waBanner').classList.remove('on');}
+
+// ── WhatsApp settings (admin) ──
+function renderWaSettings(){
+  const sec=document.getElementById('waSection');if(!sec)return;
+  sec.classList.toggle('on',isAdmin);
+  if(!isAdmin)return;
+  const list=document.getElementById('waList');list.innerHTML='';
+  (state.waNotify||[]).forEach(r=>{
+    const row=document.createElement('div');row.className='wa-entry';
+    const info=document.createElement('div');info.className='wa-entry-info';
+    info.innerHTML='<div class="wa-entry-ph">📱 '+esc(r.phone)+'</div><div class="wa-entry-key">API Key: '+esc(r.apikey)+'</div>';
+    const del=document.createElement('button');del.className='hol-del';del.textContent='✕';del.onclick=()=>delWaNotify(r.id);
+    row.appendChild(info);row.appendChild(del);list.appendChild(row);
+  });
+  if(!state.waNotify.length){const e=document.createElement('div');e.style.cssText='font-size:13px;color:var(--faint);padding:10px 0';e.textContent='No recipients yet.';list.appendChild(e);}
+}
+
+function addWaNotify(){
+  const phone=document.getElementById('waPhoneInput').value.trim();
+  const apikey=document.getElementById('waKeyInput').value.trim();
+  if(!phone||!apikey){toast('Please enter both phone and API key');return;}
+  if(!state.waNotify)state.waNotify=[];
+  state.waNotify.push({id:genId(),phone,apikey});
+  document.getElementById('waPhoneInput').value='';document.getElementById('waKeyInput').value='';
+  save();renderWaSettings();toast('Added');
+}
+
+function delWaNotify(id){
+  state.waNotify=(state.waNotify||[]).filter(r=>r.id!==id);
+  save();renderWaSettings();
+}
+
+// ── Driver Info Modal (admin) ──
+function openDriverModal(p,iso){
+  _dmState={p,iso};
+  const k=ckey(p,iso);const a=state.admin[k]||{};
+  const dts=fmtDates().find(d=>d.iso===iso);
+  document.getElementById('dmTitle').textContent=p+' \xb7 '+(dts?dts.d1+' ('+dts.d2+')':iso);
+  document.getElementById('dmVehicle').value=a.plate||'';
+  document.getElementById('dmChauffeur').value=a.driver||'';
+  document.getElementById('dmMobile').value=a.mobile||'';
+  const ta=document.getElementById('dmRawText');ta.value=a.rawText||'';
+  ta.oninput=()=>_dmParse();
+  document.getElementById('dmDelBtn').style.display=(a.driver||a.plate||a.mobile)?'':'none';
+  const errDiv=document.getElementById('dmErrors');if(errDiv)errDiv.innerHTML='';
+  const saveBtn=document.getElementById('dmSaveBtn');if(saveBtn)saveBtn.disabled=false;
+  document.getElementById('driverModal').classList.add('on');
+  if(a.rawText)_dmValidate();
+}
+
+function _dmParse(){
+  const text=document.getElementById('dmRawText').value;if(!text.trim()){_dmValidate();return;}
+  const p=parseBookingText(text);
+  if(p.vehicleNumber)document.getElementById('dmVehicle').value=p.vehicleNumber;
+  if(p.chauffeur)document.getElementById('dmChauffeur').value=p.chauffeur;
+  if(p.mobileNo)document.getElementById('dmMobile').value=p.mobileNo;
+  _dmValidate();
+}
+
+function _dmValidate(){
+  const {p,iso}=_dmState;if(!p||!iso)return;
+  const k=ckey(p,iso);
+  const rawText=document.getElementById('dmRawText').value;
+  const errDiv=document.getElementById('dmErrors');
+  const saveBtn=document.getElementById('dmSaveBtn');
+  if(!errDiv||!saveBtn)return;
+  errDiv.innerHTML='';
+  if(!rawText.trim()){saveBtn.disabled=false;return;}
+  const parsed=parseBookingText(rawText);
+  const errs=[];
+  if(parsed.guestName){if(stripPrefix(parsed.guestName).toLowerCase()!==stripPrefix(p).toLowerCase())errs.push('GUEST NAME "'+parsed.guestName+'" does not match "'+p+'"');}else errs.push('GUEST NAME not found in text');
+  if(parsed.reportingDate){if(!matchDate(parsed.reportingDate,iso))errs.push('REPORTING DATE "'+parsed.reportingDate+'" does not match column date '+iso);}else errs.push('REPORTING DATE not found in text');
+  if(parsed.reportingTime){const userTime=(state.cells[k]||{}).time||'';if(userTime){const rM=timeToMins(parsed.reportingTime),uM=timeToMins(userTime);if(!isNaN(rM)&&!isNaN(uM)&&rM>=uM)errs.push('REPORTING TIME "'+parsed.reportingTime+'" must be before user\'s pickup time "'+userTime+'"');}}else errs.push('REPORTING TIME not found in text');
+  const userAddr=(state.cells[k]||{}).address||'';
+  if(userAddr&&parsed.reportingAddress){if(parsed.reportingAddress.toLowerCase().trim()!==userAddr.toLowerCase().trim())errs.push('REPORTING ADD "'+parsed.reportingAddress+'" does not match user\'s address "'+userAddr+'"');}
+  if(errs.length){errDiv.innerHTML=errs.map(e=>'<div class="dm-err-item">⚠ '+esc(e)+'</div>').join('');saveBtn.disabled=true;}
+  else{saveBtn.disabled=false;}
+}
+
+function saveDriverModal(){
+  const {p,iso}=_dmState;if(!p||!iso)return;
+  const saveBtn=document.getElementById('dmSaveBtn');
+  if(saveBtn&&saveBtn.disabled)return;
+  const k=ckey(p,iso);
+  const plate=document.getElementById('dmVehicle').value.trim();
+  const driver=document.getElementById('dmChauffeur').value.trim();
+  const mobile=document.getElementById('dmMobile').value.trim();
+  const rawText=document.getElementById('dmRawText').value;
+  state.admin[k]=Object.assign({},state.admin[k]||{},{plate,driver,mobile,rawText});
+  closeDriverModal();save();render();renderPasteTable();toast('Saved');
+}
+
+function deleteDriverInfo(){
+  const {p,iso}=_dmState;if(!p||!iso)return;
+  const k=ckey(p,iso);
+  delete state.admin[k];
+  closeDriverModal();save();render();renderPasteTable();toast('Deleted');
+}
+
+function closeDriverModal(){
+  document.getElementById('driverModal').classList.remove('on');
+  _dmState={p:null,iso:null};
+}
+
+// ── Helpers ──
+function getSortedPersons(){return[...(state.persons||[])].sort((a,b)=>{const oa=(state.personOrder||{})[a]||999,ob=(state.personOrder||{})[b]||999;return oa-ob;});}
+function setPersonOrder(p,v){const n=parseInt(v);if(!state.personOrder)state.personOrder={};if(isNaN(n)||n<1)delete state.personOrder[p];else state.personOrder[p]=n;save();render();renderPasteTable();}
 
 // ── Schedule Table ──
 function render(){
-  const dates=fmtDates(), head=document.getElementById('head'), body=document.getElementById('body');
-  head.innerHTML=''; body.innerHTML='';
-
-  const corner=document.createElement('th'); corner.className='corner'; corner.textContent='Name \\ Date'; head.appendChild(corner);
+  const dates=fmtDates(),head=document.getElementById('head'),body=document.getElementById('body');
+  head.innerHTML='';body.innerHTML='';
+  const sortedPersons=getSortedPersons();
+  const corner=document.createElement('th');corner.className='corner';corner.textContent='Name \\ Date';head.appendChild(corner);
   dates.forEach(dt=>{
-    const th=document.createElement('th');
-    th.className='date '+dt.cls+(isHoliday(dt.iso)?' blkd':'');
-    th.innerHTML=`<div class="d">${dt.d1}</div><div class="w">${dt.d2}</div>`;
+    const th=document.createElement('th');th.className='date '+dt.cls+(isHoliday(dt.iso)?' blkd':'');
+    const badCount=sortedPersons.filter(p=>(state.cells[ckey(p,dt.iso)]||{}).badminton).length;
+    const note=(state.dateNotes||{})[dt.iso]||'';
+    const r3Parts=[];if(badCount>=2)r3Parts.push('🏸');if(note)r3Parts.push(esc(note));
+    th.innerHTML='<div class="d">'+dt.d1+'</div><div class="w">'+dt.d2+'</div>'+(r3Parts.length?'<div class="th-r3">'+r3Parts.join(' ')+'</div>':'');
+    if(isAdmin){th.style.cursor='pointer';th.title='Click to add note';th.onclick=()=>openDateModal(dt.iso);}
     head.appendChild(th);
   });
-
-  if(!state.persons.length){
-    const tr=document.createElement('tr'),td=document.createElement('td');
-    td.colSpan=dates.length+1; td.className='empty-row'; td.textContent='No passengers yet — click "Add Name" below';
-    tr.appendChild(td); body.appendChild(tr);
+  if(!sortedPersons.length){
+    const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=dates.length+1;td.className='empty-row';td.textContent='No passengers yet — click "Add Name" below';tr.appendChild(td);body.appendChild(tr);
   }
-
-  state.persons.forEach(p=>{
+  sortedPersons.forEach(p=>{
     const tr=document.createElement('tr');
-    const ptd=document.createElement('td'); ptd.className='person';
-    const ph=document.createElement('div'); ph.className='phead';
-    ph.onclick=e=>{if(e.target.closest('.pmenu'))return;document.querySelectorAll('.phead.open').forEach(x=>{if(x!==ph)x.classList.remove('open');});ph.classList.toggle('open');};
-    let inner=`<div class="pname">${esc(p)}${I.chev}</div>`;
-    if(state.addresses[p]) inner+=`<div class="paddr-line">📍 ${esc(state.addresses[p])}</div>`;
-    inner+=`<div class="pmenu">
-      <button class="mbtn" onclick="renamePerson('${jsesc(p)}')">${I.edit} Edit Name</button>
-      <button class="mbtn" onclick="editAddr('${jsesc(p)}')">${I.pin} My Address</button>
-      <button class="mbtn danger" onclick="delPerson('${jsesc(p)}')">${I.trash} Remove Name</button>
-    </div>`;
-    ph.innerHTML=inner; ptd.appendChild(ph); tr.appendChild(ptd);
-
+    const ptd=document.createElement('td');ptd.className='person';
+    const ph=document.createElement('div');ph.className='phead';
+    ph.onclick=e=>{if(e.target.closest('.pmenu')||e.target.closest('.porder-wrap'))return;document.querySelectorAll('.phead.open').forEach(x=>{if(x!==ph)x.classList.remove('open');});ph.classList.toggle('open');};
+    let inner='';
+    if(isAdmin){const ov=(state.personOrder||{})[p]||'';inner+='<div class="porder-wrap"><span class="porder-label">No.</span><input class="porder-input" type="number" min="1" value="'+esc(ov)+'" placeholder="—" onchange="setPersonOrder(\''+jsesc(p)+'\',this.value)" onclick="event.stopPropagation()"></div>';}
+    inner+='<div class="pname">'+esc(p)+I.chev+'</div>';
+    if(state.addresses[p])inner+='<div class="paddr-line">📍 '+esc(state.addresses[p])+'</div>';
+    inner+='<div class="pmenu"><button class="mbtn" onclick="renamePerson(\''+jsesc(p)+'\')">'+I.edit+' Edit Name</button><button class="mbtn" onclick="editAddr(\''+jsesc(p)+'\')">'+I.pin+' My Address</button><button class="mbtn danger" onclick="delPerson(\''+jsesc(p)+'\')">'+I.trash+' Remove Name</button></div>';
+    ph.innerHTML=inner;ptd.appendChild(ph);tr.appendChild(ptd);
     dates.forEach(dt=>{
-      const td=document.createElement('td'), k=ckey(p,dt.iso);
+      const td=document.createElement('td'),k=ckey(p,dt.iso);
       const cell=document.createElement('div');
-      // Sat(6) and Sun(0) are both weekend home days
-      const blocked=isHoliday(dt.iso), isWeekend=(dt.dow===0||dt.dow===6);
+      const blocked=isHoliday(dt.iso),isWeekend=(dt.dow===0||dt.dow===6),isPast=(dt.cls==='yest');
       cell.className='cell'+(blocked?' blkd':'');
-
       if(blocked){
         cell.onclick=()=>showFlash(cell);
-        const msg=document.createElement('div'); msg.className='blocked-msg'; msg.textContent='Booking Unavailable';
-        cell.appendChild(msg);
-      } else if(isWeekend){
-        const s=document.createElement('div'); s.className='cell-weekend'; s.textContent='🏠';
-        s.onclick=()=>showFlash(cell,'Stay home, Stay safe');
-        cell.appendChild(s);
-        appendAdminInfo(cell,k);
-      } else {
+        const msg=document.createElement('div');msg.className='blocked-msg';msg.textContent='Booking Unavailable';cell.appendChild(msg);
+      }else if(isWeekend){
+        const s=document.createElement('div');s.className='cell-weekend';s.textContent='🏠';
+        s.onclick=()=>showFlash(cell,'Stay home, Stay safe');cell.appendChild(s);appendAdminInfo(cell,k);
+      }else{
         const savedTime=(state.cells[k]||{}).time||'';
         const savedAddr=(state.cells[k]||{}).address||'';
-        const isPast = dt.cls==='yest'; // yesterday = past, read-only for users
-
+        const savedBad=(state.cells[k]||{}).badminton||false;
+        const canEdit=!isPast&&!isAdmin;
+        if(canEdit){cell.style.cursor='pointer';cell.onclick=e=>{e.stopPropagation();openCellModal(p,dt);};}
         if(savedTime){
-          const row=document.createElement('div'); row.className='time-row';
-          const badge=document.createElement('div'); badge.className='time-badge'; badge.textContent=savedTime;
-          if(!isAdmin && !isPast){
-            // Future/today: editable
-            badge.title='Click to edit';
-            badge.onclick=()=>openUserCellModal(p, dt, k, savedTime);
-            const editBtn=document.createElement('button'); editBtn.type='button'; editBtn.className='cell-btn edit-time';
-            editBtn.innerHTML='<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit';
-            editBtn.onclick=()=>openUserCellModal(p, dt, k, savedTime);
-            row.appendChild(badge); row.appendChild(editBtn);
-          } else {
-            // Yesterday (past) or admin: show badge only, no edit
-            badge.style.cursor='default'; badge.title='';
-            row.appendChild(badge);
-          }
+          const row=document.createElement('div');row.className='time-row';
+          const badge=document.createElement('div');badge.className='time-badge';badge.textContent=savedTime;
+          row.appendChild(badge);
+          if(savedBad){const bi=document.createElement('span');bi.textContent='🏸';bi.style.cssText='font-size:18px;line-height:1';row.appendChild(bi);}
           cell.appendChild(row);
-          if(savedAddr){
-            const addrDiv=document.createElement('div'); addrDiv.className='cell-addr';
-            addrDiv.textContent='📍 '+savedAddr;
-            cell.appendChild(addrDiv);
-          }
-          appendAdminInfo(cell,k);
-        } else {
-          if(!isAdmin && !isPast){
-            // Only show prompt for today/future
-            const prompt=document.createElement('button'); prompt.type='button'; prompt.className='cell-prompt';
-            prompt.innerHTML=I.clock+' Your pick up time';
-            prompt.onclick=()=>openUserCellModal(p, dt, k, '');
-            cell.appendChild(prompt);
-          }
-          appendAdminInfo(cell,k);
+          if(savedAddr){const al=document.createElement('div');al.className='cell-addr-line';al.textContent='📍 '+savedAddr;cell.appendChild(al);}
+        }else if(canEdit){
+          const prompt=document.createElement('button');prompt.type='button';prompt.className='cell-prompt';
+          prompt.innerHTML=I.clock+' Your pick up time';
+          prompt.onclick=e=>{e.stopPropagation();openCellModal(p,dt);};cell.appendChild(prompt);
         }
+        appendAdminInfo(cell,k);
       }
-      td.appendChild(cell); tr.appendChild(td);
+      td.appendChild(cell);tr.appendChild(td);
     });
     body.appendChild(tr);
   });
-
-  const addtr=document.createElement('tr'); addtr.className='addrow';
-  const atd=document.createElement('td'); atd.className='person';
-  const ab=document.createElement('button'); ab.className='addperson'; ab.innerHTML=I.plus+'Add Name'; ab.onclick=addPerson;
-  atd.appendChild(ab); addtr.appendChild(atd);
-  const sp=document.createElement('td'); sp.colSpan=dates.length; addtr.appendChild(sp);
+  const addtr=document.createElement('tr');addtr.className='addrow';
+  const atd=document.createElement('td');atd.className='person';
+  const ab=document.createElement('button');ab.className='addperson';ab.innerHTML=I.plus+'Add Name';ab.onclick=addPerson;
+  atd.appendChild(ab);addtr.appendChild(atd);
+  const sp=document.createElement('td');sp.colSpan=dates.length;addtr.appendChild(sp);
   body.appendChild(addtr);
   document.getElementById('importSection').classList.toggle('on',isAdmin);
+  document.getElementById('activeBar').classList.toggle('on',isAdmin);
 }
 
 function appendAdminInfo(cell,k){
   const a=state.admin[k]||{};
   if(a.driver||a.plate||a.mobile){
-    const box=document.createElement('div'); box.className='admininfo';
-    if(a.driver) box.innerHTML+=`<div class="arow">${I.user}<span>${esc(a.driver)}</span></div>`;
-    if(a.plate)  box.innerHTML+=`<div class="arow">${I.car}<span class="plate">${esc(a.plate)}</span></div>`;
-    if(a.mobile){
-      const clean=a.mobile.replace(/\s/g,'');
-      box.innerHTML+=`<div class="arow">${I.phone}<a class="tel-link" href="tel:${esc(clean)}">${esc(a.mobile)}</a></div>`;
-    }
+    const box=document.createElement('div');box.className='admininfo';
+    if(a.driver)box.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';
+    if(a.plate)box.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';
+    if(a.mobile){const clean=a.mobile.replace(/\s/g,'');box.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'">'+esc(a.mobile)+'</a></div>';}
     cell.appendChild(box);
   }
 }
 
 // ── User actions ──
 function addPerson(){openModal('Enter name','',v=>{v=v.trim();if(!v)return;if(!state.persons.includes(v)){state.persons.push(v);save();render();renderPasteTable();}else toast('Name already exists');});}
-function renamePerson(p){
-  openModal('Rename "'+p+'"',p,v=>{
-    v=v.trim();if(!v||v===p)return;
-    if(state.persons.includes(v)){toast('Name already exists');return;}
-    const idx=state.persons.indexOf(p);if(idx>=0)state.persons[idx]=v;
-    if(state.addresses[p]){state.addresses[v]=state.addresses[p];delete state.addresses[p];}
-    const rekey=obj=>{Object.keys(obj).forEach(k=>{if(k.startsWith(p+'|')){obj[v+'|'+k.slice(p.length+1)]=obj[k];delete obj[k];}});};
-    rekey(state.cells);rekey(state.admin);
-    save();render();renderPasteTable();toast('Renamed to '+v);
-  });
-}
+function renamePerson(p){openModal('Rename "'+p+'"',p,v=>{v=v.trim();if(!v||v===p)return;if(state.persons.includes(v)){toast('Name already exists');return;}const idx=state.persons.indexOf(p);if(idx>=0)state.persons[idx]=v;if(state.addresses[p]){state.addresses[v]=state.addresses[p];delete state.addresses[p];}const rekey=obj=>{Object.keys(obj).forEach(k=>{if(k.startsWith(p+'|')){obj[v+'|'+k.slice(p.length+1)]=obj[k];delete obj[k];}});};rekey(state.cells);rekey(state.admin);save();render();renderPasteTable();toast('Renamed to '+v);});}
 function editAddr(p){openModal('Address for "'+p+'" (blank to remove)',state.addresses[p]||'',v=>{v=v.trim();if(v)state.addresses[p]=v;else delete state.addresses[p];save();render();renderPasteTable();});}
-function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return;
-  state.persons=state.persons.filter(x=>x!==p);delete state.addresses[p];
-  Object.keys(state.cells).forEach(k=>{if(k.startsWith(p+'|'))delete state.cells[k];});
-  Object.keys(state.admin).forEach(k=>{if(k.startsWith(p+'|'))delete state.admin[k];});
-  save();render();renderPasteTable();}
+function delPerson(p){if(!confirm('Remove "'+p+'"? All entries deleted.'))return;state.persons=state.persons.filter(x=>x!==p);delete state.addresses[p];Object.keys(state.cells).forEach(k=>{if(k.startsWith(p+'|'))delete state.cells[k];});Object.keys(state.admin).forEach(k=>{if(k.startsWith(p+'|'))delete state.admin[k];});save();render();renderPasteTable();}
 
 // ── Access gate ──
 function showLoginGate(){
   document.getElementById('loadOverlay').classList.remove('on');
   document.getElementById('accessOverlay').classList.add('on');
-  const inp=document.getElementById('accessInput');
-  inp.value='';
-  setTimeout(()=>inp.focus(),40);
+  const inp=document.getElementById('accessInput');inp.value='';setTimeout(()=>inp.focus(),40);
   inp.onkeydown=e=>{if(e.key==='Enter')doAccess();};
 }
 
 function checkAccess(){
-  firebase.auth().onAuthStateChanged(async user=>{
+  firebase.auth().onAuthStateChanged(user=>{
     if(user){
-      const ts=parseInt(localStorage.getItem(SESS_KEY)||'0');
-      if(ts && (Date.now()-ts) > SESS_MS){
-        localStorage.removeItem(SESS_KEY);
-        await firebase.auth().signOut();
-        showLoginGate(); return;
-      }
+      if(!sessionOK(LS_AUTH)){firebase.auth().signOut();lsDel(LS_AUTH);lsDel(LS_ADM);showLoginGate();return;}
+      if(user.email===ADMIN_EMAIL){isAdmin=true;lsSet(LS_ADM);document.getElementById('adminBadge').classList.add('on');document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';}
       startListening();
-    } else {
-      showLoginGate();
-    }
+    }else{showLoginGate();}
   });
 }
 
 async function doAccess(){
-  const pw=document.getElementById('accessInput').value.trim();
-  if(!pw) return;
-  const emails=[USER_EMAIL, ADMIN_EMAIL];
-  let success=false;
-  for(const email of emails){
-    try{
-      await firebase.auth().signInWithEmailAndPassword(email, pw);
-      success=true; break;
-    }catch(e){}
-  }
-  if(!success){
-    toast('Incorrect access code');
-    document.getElementById('accessInput').value='';
-    setTimeout(()=>document.getElementById('accessInput').focus(),50);
-  } else {
-    localStorage.setItem(SESS_KEY, Date.now());
-    document.getElementById('accessOverlay').classList.remove('on');
-    document.getElementById('loadOverlay').classList.add('on');
-  }
+  const pw=document.getElementById('accessInput').value.trim();if(!pw)return;
+  const emails=[USER_EMAIL,ADMIN_EMAIL];let success=false;
+  for(const email of emails){try{await firebase.auth().signInWithEmailAndPassword(email,pw);success=true;break;}catch(e){}}
+  if(!success){toast('Incorrect access code');document.getElementById('accessInput').value='';setTimeout(()=>document.getElementById('accessInput').focus(),50);}
+  else{lsSet(LS_AUTH);document.getElementById('accessOverlay').classList.remove('on');document.getElementById('loadOverlay').classList.add('on');}
 }
 
-// ── Admin login / logout (uses fbApp2, never disturbs main session) ──
 async function toggleAdmin(){
   if(isAdmin){
-    isAdmin=false;
+    isAdmin=false;lsDel(LS_ADM);
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
-    render(); toast('Exited admin mode');
-  } else {
+    render();renderPasteTable();renderHolidays();renderWaSettings();toast('Admin mode off');
+  }else{
     openModal('Enter admin code','',async v=>{
-      const pw=v.trim(); if(!pw) return;
+      const pw=v.trim();if(!pw)return;
       try{
-        await firebase.app('verify').auth().signInWithEmailAndPassword(ADMIN_EMAIL, pw);
+        await firebase.app('verify').auth().signInWithEmailAndPassword(ADMIN_EMAIL,pw);
         await firebase.app('verify').auth().signOut();
-        isAdmin=true;
+        isAdmin=true;lsSet(LS_ADM);
         document.getElementById('adminBadge').classList.add('on');
         document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
-        render(); renderPasteTable(); renderHolidays(); toast('Admin mode enabled');
-      }catch(e){ toast('Incorrect access code'); }
+        render();renderPasteTable();renderHolidays();renderWaSettings();toast('Admin mode on');
+      }catch(e){toast('Incorrect access code');}
     },true);
   }
 }
 
-// ── Driver Info Table ──
+// ── Driver Info ──
 function renderPasteTable(){
   const dates=fmtDates(),head=document.getElementById('paste-head'),body=document.getElementById('paste-body');
   head.innerHTML='';body.innerHTML='';
   const corner=document.createElement('th');corner.className='corner';corner.textContent='Name \\ Date';head.appendChild(corner);
-  dates.forEach(dt=>{
-    const th=document.createElement('th');th.className='date '+dt.cls+(isHoliday(dt.iso)?' blkd':'');
-    th.innerHTML=`<div class="d">${dt.d1}</div><div class="w">${dt.d2}</div>`;head.appendChild(th);
-  });
-  if(!state.persons.length){
-    const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=dates.length+1;td.className='empty-row';td.textContent='Add passengers in Schedule first';tr.appendChild(td);body.appendChild(tr);return;
-  }
-  state.persons.forEach(p=>{
+  dates.forEach(dt=>{const th=document.createElement('th');th.className='date '+dt.cls+(isHoliday(dt.iso)?' blkd':'');th.innerHTML='<div class="d">'+dt.d1+'</div><div class="w">'+dt.d2+'</div>';head.appendChild(th);});
+  const sortedPersons=getSortedPersons();
+  if(!sortedPersons.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=dates.length+1;td.className='empty-row';td.textContent='Add passengers in Schedule first';tr.appendChild(td);body.appendChild(tr);return;}
+  sortedPersons.forEach(p=>{
     const tr=document.createElement('tr');
     const ptd=document.createElement('td');ptd.className='person';
     const ph=document.createElement('div');ph.className='paste-phead';
     const nm=document.createElement('div');nm.className='paste-pname';nm.textContent=p;ph.appendChild(nm);
     if(state.addresses[p]){const ad=document.createElement('div');ad.className='paste-paddr';ad.textContent='Address: '+state.addresses[p];ph.appendChild(ad);}
     ptd.appendChild(ph);tr.appendChild(ptd);
-    dates.forEach(dt=>{
-      const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');
-      cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');
-      if(!isHoliday(dt.iso)) buildPasteCell(cell,k,p,dt);
-      td.appendChild(cell);tr.appendChild(td);
-    });
+    dates.forEach(dt=>{const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');if(!isHoliday(dt.iso)){const a=state.admin[k]||{};const hasInfo=a.driver||a.plate||a.mobile;if(isAdmin){cell.style.cursor='pointer';cell.onclick=()=>openDriverModal(p,dt.iso);}if(hasInfo){const info=document.createElement('div');info.className='dm-cell-info';if(a.plate)info.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';if(a.driver)info.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';if(a.mobile){const clean=a.mobile.replace(/\s/g,'');info.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'">'+esc(a.mobile)+'</a></div>';}cell.appendChild(info);}else if(isAdmin){const empty=document.createElement('div');empty.className='dm-cell-empty';empty.textContent='+ Add driver info';cell.appendChild(empty);}}td.appendChild(cell);tr.appendChild(td);});
     body.appendChild(tr);
   });
 }
 
-function buildPasteCell(cell, k, person, dt){
-  cell.innerHTML='';
-  const a=state.admin[k]||{};
-  const hasInfo=!!(a.driver||a.plate||a.mobile);
-  const btn=document.createElement('button'); btn.type='button'; btn.className='cell-prompt';
-  if(hasInfo){
-    btn.style.background='var(--accent-soft)';
-    btn.style.borderStyle='solid';
-    let label='';
-    if(a.driver) label+=esc(a.driver);
-    if(a.plate)  label+=(label?' · ':'')+`<span class="plate">${esc(a.plate)}</span>`;
-    btn.innerHTML=I.car+' '+label;
-  } else {
-    btn.innerHTML=I.car+' Enter driver info';
-  }
-  btn.onclick=()=>openAdminCellModal(person, dt, k);
-  cell.appendChild(btn);
-}
+function getLast(text,key){const re=new RegExp(key+'\\s*:?\\s*([^\\n\\r]+)','gi');let m,last=null;while((m=re.exec(text))!==null)last=m[1].trim();return last;}
 
-// Parse booking confirmation text.
-// mobileNo uses last match (getLast) to pick the final MOBILE NO line in the document.
 function parseBookingText(text){
-  const get=key=>{
-    const m=text.match(new RegExp(key+'\\s*:?\\s*([^\\n\\r]+)','i'));
-    return m?m[1].trim():null;
-  };
-  const getLast=key=>{
-    const re=new RegExp(key+'\\s*:?\\s*([^\\n\\r]+)','gi');
-    let m, last=null;
-    while((m=re.exec(text))!==null) last=m[1].trim();
-    return last;
-  };
-  return{
-    reportingTime:  get('REPORTING\\s+TIME'),
-    reportingDate:  get('REPORTING\\s+DATE'),
-    guestName:      get('GUEST\\s+NAME'),
-    vehicleNumber:  get('VEHICLE\\s+NUMBER'),
-    chauffeur:      get('CHAUFFEUR'),
-    mobileNo:       getLast('MOBILE\\s+NO\\.?')
-  };
+  const get=key=>{const m=text.match(new RegExp(key+'\\s*:?\\s*([^\\n\\r]+)','i'));return m?m[1].trim():null;};
+  return{reportingTime:get('REPORTING\\s+TIME'),reportingDate:get('REPORTING\\s+DATE'),guestName:get('GUEST\\s+NAME'),vehicleNumber:get('VEHICLE\\s+NUMBER'),chauffeur:get('CHAUFFEUR'),mobileNo:getLast(text,'MOBILE\\s+NO\\.?'),reportingAddress:get('REPORTING\\s+ADD(?:RESS)?')};
 }
 
 // ── Holiday Section ──
 function renderHolidays(){
-  if(!isAdmin)return;
-  const list=document.getElementById('holList');list.innerHTML='';
+  if(!isAdmin)return;const list=document.getElementById('holList');list.innerHTML='';
   (state.holidays||[]).forEach(h=>{
-    const row=document.createElement('div');row.className='hol-row';
-    row.onclick=()=>openCalModal(h.id);
+    const row=document.createElement('div');row.className='hol-row';row.onclick=()=>openCalModal(h.id);
     const dot=document.createElement('div');dot.className='hol-dot';
     const lbl=document.createElement('div');lbl.className='hol-label';lbl.textContent=fmtHolRange(h);
-    const del=document.createElement('button');del.className='hol-del';del.textContent='✕';
-    del.onclick=e=>{e.stopPropagation();delHoliday(h.id);};
+    const del=document.createElement('button');del.className='hol-del';del.textContent='✕';del.onclick=e=>{e.stopPropagation();delHoliday(h.id);};
     row.appendChild(dot);row.appendChild(lbl);row.appendChild(del);list.appendChild(row);
   });
 }
-function delHoliday(id){
-  state.holidays=state.holidays.filter(h=>h.id!==id);save();render();renderPasteTable();renderHolidays();
-}
+function delHoliday(id){state.holidays=state.holidays.filter(h=>h.id!==id);save();render();renderPasteTable();renderHolidays();}
 
-// ── Calendar Modal ──
 function openCalModal(editId){
-  calEditId=editId;
-  let initSel=null;
+  calEditId=editId;let initSel=null;
   if(editId){const h=state.holidays.find(x=>x.id===editId);if(h)initSel={start:h.start,end:h.end};}
   document.getElementById('calContainer').innerHTML='';
   calPicker=makeCalendar(initSel,updateCalSelText);
   document.getElementById('calContainer').appendChild(calPicker.el);
-  updateCalSelText(calPicker.getSelection());
-  document.getElementById('calOverlay').classList.add('on');
+  updateCalSelText(calPicker.getSelection());document.getElementById('calOverlay').classList.add('on');
 }
 function closeCalModal(){document.getElementById('calOverlay').classList.remove('on');calPicker=null;calEditId=null;}
 function saveCalModal(){
-  if(!calPicker)return;
-  const sel=calPicker.getSelection();
-  if(!sel){toast('Please select at least one date');return;}
+  if(!calPicker)return;const sel=calPicker.getSelection();if(!sel){toast('Please select at least one date');return;}
   if(calEditId){const h=state.holidays.find(x=>x.id===calEditId);if(h){h.start=sel.start;h.end=sel.end;}}
   else{state.holidays.push({id:genId(),start:sel.start,end:sel.end});}
   save();render();renderPasteTable();renderHolidays();closeCalModal();toast('Holiday saved');
 }
-function updateCalSelText(sel){
-  const el=document.getElementById('calSelText');if(!el)return;
-  if(!sel)el.textContent='';
-  else if(sel.start===sel.end)el.textContent='Selected: '+sel.start;
-  else el.textContent='Selected: '+sel.start+' → '+sel.end;
-}
+function updateCalSelText(sel){const el=document.getElementById('calSelText');if(!el)return;if(!sel)el.textContent='';else if(sel.start===sel.end)el.textContent='Selected: '+sel.start;else el.textContent='Selected: '+sel.start+' → '+sel.end;}
 
-function makeCalendar(initSel, onSelChange){
-  const now=new Date();
-  let viewY=now.getFullYear(), viewM=now.getMonth();
-  let selStart=initSel?initSel.start:null, selEnd=initSel?initSel.end:null;
-  let phase=initSel?'done':'none';
-  let hoverDate=null;
-  const todayISO=localISO(now);
-  const el=document.createElement('div');
-
-  function updateClasses(){
-    el.querySelectorAll('.cal-cell[data-iso]').forEach(c=>{
-      const iso=c.dataset.iso;
-      c.classList.toggle('c-start', iso===selStart);
-      c.classList.toggle('c-end', !!(iso===(selEnd||selStart)&&selEnd&&selEnd!==selStart));
-      c.classList.toggle('c-range', !!(selStart&&selEnd&&iso>selStart&&iso<selEnd));
-      c.classList.toggle('c-hover', !!(phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate));
-    });
-  }
-
+function makeCalendar(initSel,onSelChange){
+  const now=new Date();let viewY=now.getFullYear(),viewM=now.getMonth();
+  let selStart=initSel?initSel.start:null,selEnd=initSel?initSel.end:null;
+  let clickCount=initSel?2:0;
+  const todayISO=localISO(now),el=document.createElement('div');
   function renderCal(){
-    el.innerHTML='';
-    const hdr=document.createElement('div');hdr.className='cal-hdr';
-    const prev=document.createElement('button');prev.type='button';prev.textContent='‹';
-    prev.onclick=()=>{viewM--;if(viewM<0){viewM=11;viewY--;}renderCal();};
-    const title=document.createElement('span');title.className='cal-title';
-    title.textContent=new Date(viewY,viewM,1).toLocaleString('en',{month:'long',year:'numeric'});
-    const next=document.createElement('button');next.type='button';next.textContent='›';
-    next.onclick=()=>{viewM++;if(viewM>11){viewM=0;viewY++;}renderCal();};
+    el.innerHTML='';const hdr=document.createElement('div');hdr.className='cal-hdr';
+    const prev=document.createElement('button');prev.type='button';prev.textContent='‹';prev.onclick=()=>{viewM--;if(viewM<0){viewM=11;viewY--;}renderCal();};
+    const title=document.createElement('span');title.className='cal-title';title.textContent=new Date(viewY,viewM,1).toLocaleString('en',{month:'long',year:'numeric'});
+    const next=document.createElement('button');next.type='button';next.textContent='›';next.onclick=()=>{viewM++;if(viewM>11){viewM=0;viewY++;}renderCal();};
     hdr.appendChild(prev);hdr.appendChild(title);hdr.appendChild(next);el.appendChild(hdr);
-    const dayHdr=document.createElement('div');dayHdr.className='cal-days';
-    ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d=>{const c=document.createElement('div');c.className='cal-dh';c.textContent=d;dayHdr.appendChild(c);});
-    el.appendChild(dayHdr);
+    const dayHdr=document.createElement('div');dayHdr.className='cal-days';['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d=>{const c=document.createElement('div');c.className='cal-dh';c.textContent=d;dayHdr.appendChild(c);});el.appendChild(dayHdr);
     const grid=document.createElement('div');grid.className='cal-grid';
-    const firstDow=new Date(viewY,viewM,1).getDay();
-    const startOff=(firstDow===0?6:firstDow-1);
-    const dim=new Date(viewY,viewM+1,0).getDate();
+    const firstDow=new Date(viewY,viewM,1).getDay(),startOff=(firstDow===0?6:firstDow-1),dim=new Date(viewY,viewM+1,0).getDate();
     for(let i=0;i<startOff;i++){const c=document.createElement('div');c.className='cal-cell empty';grid.appendChild(c);}
     for(let d=1;d<=dim;d++){
-      const iso=`${viewY}-${pad2(viewM+1)}-${pad2(d)}`;
-      const c=document.createElement('div');c.className='cal-cell';c.textContent=d;c.dataset.iso=iso;
+      const iso=viewY+'-'+pad2(viewM+1)+'-'+pad2(d);
+      const c=document.createElement('div');c.className='cal-cell';c.textContent=d;
       if(iso===todayISO)c.classList.add('c-today');
       if(iso===selStart)c.classList.add('c-start');
-      if(iso===(selEnd||selStart)&&selEnd&&selEnd!==selStart)c.classList.add('c-end');
+      if(selEnd&&selEnd!==selStart&&iso===selEnd)c.classList.add('c-end');
       if(selStart&&selEnd&&iso>selStart&&iso<selEnd)c.classList.add('c-range');
-      if(phase==='one'&&hoverDate&&selStart&&iso>selStart&&iso<=hoverDate)c.classList.add('c-hover');
       c.onclick=()=>{
-        if(phase==='none'||phase==='done'){selStart=iso;selEnd=null;phase='one';}
-        else{if(iso<selStart){selEnd=selStart;selStart=iso;}else{selEnd=iso;}phase='done';}
-        hoverDate=null; updateClasses(); onSelChange&&onSelChange(getSelection());
+        if(clickCount===0||clickCount===2){selStart=iso;selEnd=null;clickCount=1;}
+        else{if(iso<=selStart){selEnd=selStart;selStart=iso;}else{selEnd=iso;}clickCount=2;}
+        renderCal();if(onSelChange)onSelChange(getSelection());
       };
-      c.onmouseenter=()=>{if(phase==='one'){hoverDate=iso;updateClasses();}};
-      c.onmouseleave=()=>{if(phase==='one'){hoverDate=null;updateClasses();}};
       grid.appendChild(c);
     }
     el.appendChild(grid);
   }
-  function getSelection(){
-    if(phase==='none'||!selStart)return null;
-    return{start:selStart,end:selEnd||selStart};
-  }
-  renderCal();
-  return{el,getSelection};
+  function getSelection(){if(!selStart)return null;return{start:selStart,end:selEnd||selStart};}
+  renderCal();return{el,getSelection};
 }
 
-// ── Modal ──
+// ── Modals ──
 function openModal(title,val,cb,isPass=false){
   document.getElementById('mTitle').textContent=title;
   const inp=document.getElementById('mInput');inp.value=val;inp.type=isPass?'password':'text';modalCb=cb;
@@ -1172,9 +1046,36 @@ function openModal(title,val,cb,isPass=false){
 }
 function closeModal(){document.getElementById('overlay').classList.remove('on');modalCb=null;}
 function confirmModal(){const v=document.getElementById('mInput').value,cb=modalCb;closeModal();if(cb)cb(v);}
+
+// ── Date Note Modal ──
+function openDateModal(iso){
+  _dateState={iso};
+  const dts=fmtDates().find(x=>x.iso===iso);
+  document.getElementById('dtTitle').textContent='Date: '+(dts?dts.d1+' ('+dts.d2+')':iso);
+  const badCount=(state.persons||[]).filter(p=>(state.cells[ckey(p,iso)]||{}).badminton).length;
+  const bdiv=document.getElementById('dtBadmintonInfo');
+  bdiv.innerHTML=badCount>0?'🏸 <strong>'+badCount+'</strong> player'+(badCount!==1?'s':'')+' registered for badminton':'No badminton players on this date';
+  const note=(state.dateNotes||{})[iso]||'';
+  const inp=document.getElementById('dtNoteInput');inp.value=note;
+  document.getElementById('dtClearBtn').style.display=note?'':'none';
+  document.getElementById('dateModal').classList.add('on');
+  setTimeout(()=>inp.focus(),40);
+}
+function closeDateModal(){document.getElementById('dateModal').classList.remove('on');_dateState={iso:null};}
+function saveDateModal(){
+  const {iso}=_dateState;if(!iso)return;
+  const note=document.getElementById('dtNoteInput').value.trim();
+  if(!state.dateNotes)state.dateNotes={};
+  if(note)state.dateNotes[iso]=note;else delete state.dateNotes[iso];
+  closeDateModal();save();render();renderPasteTable();toast('Date note saved');
+}
+function clearDateNote(){document.getElementById('dtNoteInput').value='';document.getElementById('dtClearBtn').style.display='none';}
+
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
 document.getElementById('calOverlay').addEventListener('click',e=>{if(e.target.id==='calOverlay')closeCalModal();});
 document.getElementById('cellModal').addEventListener('click',e=>{if(e.target.id==='cellModal')closeCellModal();});
+document.getElementById('driverModal').addEventListener('click',e=>{if(e.target.id==='driverModal')closeDriverModal();});
+document.getElementById('dateModal').addEventListener('click',e=>{if(e.target.id==='dateModal')closeDateModal();});
 
 let tt;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2400);}
