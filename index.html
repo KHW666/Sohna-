@@ -919,9 +919,10 @@ function checkAccess(){
 async function doAccess(){
   const pw=document.getElementById('accessInput').value.trim();if(!pw)return;
   const emails=[USER_EMAIL,ADMIN_EMAIL];let success=false;
+  lsSet(LS_AUTH);
   for(const email of emails){try{await firebase.auth().signInWithEmailAndPassword(email,pw);success=true;break;}catch(e){}}
-  if(!success){toast('Incorrect access code');document.getElementById('accessInput').value='';setTimeout(()=>document.getElementById('accessInput').focus(),50);}
-  else{lsSet(LS_AUTH);document.getElementById('accessOverlay').classList.remove('on');document.getElementById('loadOverlay').classList.add('on');}
+  if(!success){lsDel(LS_AUTH);toast('Incorrect access code');document.getElementById('accessInput').value='';setTimeout(()=>document.getElementById('accessInput').focus(),50);}
+  else{document.getElementById('accessOverlay').classList.remove('on');document.getElementById('loadOverlay').classList.add('on');}
 }
 
 async function toggleAdmin(){
