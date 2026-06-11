@@ -188,18 +188,7 @@ td.person{background:#fbf8f1;vertical-align:middle}
 @keyframes popGreen{0%{transform:scale(1.5);background:#22c55e}100%{transform:scale(1);background:#22c55e}}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-#waBanner{position:fixed;bottom:0;left:0;right:0;background:#075e54;color:#fff;display:none;align-items:center;gap:12px;padding:14px 18px;z-index:70;box-shadow:0 -2px 16px rgba(0,0,0,.25)}
-#waBanner.on{display:flex}
-.wa-icon{font-size:26px;flex-shrink:0}
-.wa-msg{flex:1;min-width:0}
-.wa-msg strong{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wa-msg span{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.wa-btn{font-family:inherit;font-size:13px;cursor:pointer;background:#25d366;border:none;border-radius:20px;padding:8px 16px;color:#fff;font-weight:700;flex-shrink:0;white-space:nowrap}
-.wa-btn:hover{background:#1da851}
-.wa-close{font-family:inherit;font-size:22px;line-height:1;cursor:pointer;background:none;border:none;color:rgba(255,255,255,.7);padding:0 4px;flex-shrink:0}
-.wa-close:hover{color:#fff}
-@media(max-width:520px){#waBanner{flex-wrap:wrap}.wa-msg{order:-1;width:100%}}
-@media(max-width:680px){h1{font-size:20px}body{padding:14px 8px 60px}}
+@media(max-width:680px){h1{font-size:20px}body{padding:14px 8px 20px}}
 /* Driver info modal */
 .dm-field-row{margin-bottom:12px}
 .dm-field-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:4px}
@@ -381,15 +370,6 @@ td.person{background:#fbf8f1;vertical-align:middle}
   </div>
 </div>
 <!-- WhatsApp banner -->
-<div id="waBanner">
-  <div class="wa-icon">&#x1F4AC;</div>
-  <div class="wa-msg">
-    <strong id="waBannerTitle"></strong>
-    <span id="waBannerSub"></span>
-  </div>
-  <button class="wa-btn" onclick="openWA()">Open WhatsApp</button>
-  <button class="wa-close" onclick="dismissWA()" title="Dismiss">&#xD7;</button>
-</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -402,7 +382,6 @@ const dbRef=db.ref('sohna');
 const ADMIN_EMAIL='admin@sohna.local';
 const USER_EMAIL='user@sohna.local';
 const LS_AUTH='sohna_auth_ts';
-const LS_ADM='sohna_admin_ts';
 const SESSION_MS=7*24*60*60*1000;
 function lsGet(k){try{return parseInt(localStorage.getItem(k)||'0');}catch{return 0;}}
 function lsSet(k){try{localStorage.setItem(k,Date.now().toString());}catch{}}
@@ -412,7 +391,6 @@ const FLASH_MSGS=['Stay home, Stay safe','Enjoy your AC at home','Please contact
 
 let state={persons:[],addresses:{},cells:{},admin:{},holidays:[],waNotify:[],dateNotes:{},personOrder:{}};
 let isAdmin=false,modalCb=null,calPicker=null,calEditId=null,fbListening=false;
-let _waUrl='';
 let _cmState={p:null,dt:null,curH:8,curM:0,addr:'',badminton:false};
 let _dmState={p:null,iso:null};
 let _dateState={iso:null};
@@ -485,12 +463,6 @@ function startListening(){
   dbRef.on('value',snapshot=>{
     const data=snapshot.val();
     if(data){state=data;normalize();}else{normalize();}
-    // Auto-restore admin session
-    if(!isAdmin&&sessionOK(LS_ADM)){
-      isAdmin=true;
-      document.getElementById('adminBadge').classList.add('on');
-      document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
-    }
     document.getElementById('loadOverlay').classList.remove('on');
     render();renderPasteTable();renderHolidays();renderWaSettings();bindScrollSync();
   },()=>{
@@ -685,10 +657,6 @@ function checkAndNotify(person,dt,changeDesc){
   const d=new Date(dt.iso+'T00:00:00');
   const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
   const msg='Attention, '+person+' updated '+dateStr+' '+changeDesc+'. Please check and update if needed.';
-  _waUrl='https://wa.me/?text='+encodeURIComponent(msg);
-  document.getElementById('waBannerTitle').textContent=person+' \xb7 '+dateStr;
-  document.getElementById('waBannerSub').textContent=changeDesc;
-  document.getElementById('waBanner').classList.add('on');
   sendCallMeBot(msg);
 }
 
@@ -696,9 +664,6 @@ function sendCallMeBot(message){
   const list=state.waNotify||[];if(!list.length)return;
   list.forEach(r=>{fetch('https://api.callmebot.com/whatsapp.php?phone='+encodeURIComponent(r.phone)+'&text='+encodeURIComponent(message)+'&apikey='+encodeURIComponent(r.apikey),{mode:'no-cors'}).catch(()=>{});});
 }
-
-function openWA(){if(_waUrl)window.open(_waUrl,'_blank');}
-function dismissWA(){document.getElementById('waBanner').classList.remove('on');}
 
 // ── WhatsApp settings (admin) ──
 function renderWaSettings(){
@@ -887,7 +852,7 @@ function appendAdminInfo(cell,k){
     const box=document.createElement('div');box.className='admininfo';
     if(a.driver)box.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';
     if(a.plate)box.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';
-    if(a.mobile){const clean=a.mobile.replace(/\s/g,'');box.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'">'+esc(a.mobile)+'</a></div>';}
+    if(a.mobile){const clean=a.mobile.replace(/\s/g,'');box.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'" onclick="event.stopPropagation()">'+esc(a.mobile)+'</a></div>';}
     cell.appendChild(box);
   }
 }
@@ -909,8 +874,7 @@ function showLoginGate(){
 function checkAccess(){
   firebase.auth().onAuthStateChanged(user=>{
     if(user){
-      if(!sessionOK(LS_AUTH)){firebase.auth().signOut();lsDel(LS_AUTH);lsDel(LS_ADM);showLoginGate();return;}
-      if(user.email===ADMIN_EMAIL){isAdmin=true;lsSet(LS_ADM);document.getElementById('adminBadge').classList.add('on');document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';}
+      if(!sessionOK(LS_AUTH)){firebase.auth().signOut();lsDel(LS_AUTH);showLoginGate();return;}
       startListening();
     }else{showLoginGate();}
   });
@@ -927,7 +891,7 @@ async function doAccess(){
 
 async function toggleAdmin(){
   if(isAdmin){
-    isAdmin=false;lsDel(LS_ADM);
+    isAdmin=false;
     document.getElementById('adminBadge').classList.remove('on');
     document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Login';
     render();renderPasteTable();renderHolidays();renderWaSettings();toast('Admin mode off');
@@ -937,7 +901,7 @@ async function toggleAdmin(){
       try{
         await firebase.app('verify').auth().signInWithEmailAndPassword(ADMIN_EMAIL,pw);
         await firebase.app('verify').auth().signOut();
-        isAdmin=true;lsSet(LS_ADM);
+        isAdmin=true;
         document.getElementById('adminBadge').classList.add('on');
         document.getElementById('adminBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l9 4v6c0 5-3.8 9.4-9 11-5.2-1.6-9-6-9-11V5z"/></svg> Admin Logout';
         render();renderPasteTable();renderHolidays();renderWaSettings();toast('Admin mode on');
@@ -961,7 +925,7 @@ function renderPasteTable(){
     const nm=document.createElement('div');nm.className='paste-pname';nm.textContent=p;ph.appendChild(nm);
     if(state.addresses[p]){const ad=document.createElement('div');ad.className='paste-paddr';ad.textContent='Address: '+state.addresses[p];ph.appendChild(ad);}
     ptd.appendChild(ph);tr.appendChild(ptd);
-    dates.forEach(dt=>{const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');if(!isHoliday(dt.iso)){const a=state.admin[k]||{};const hasInfo=a.driver||a.plate||a.mobile;if(isAdmin){cell.style.cursor='pointer';cell.onclick=()=>openDriverModal(p,dt.iso);}if(hasInfo){const info=document.createElement('div');info.className='dm-cell-info';if(a.plate)info.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';if(a.driver)info.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';if(a.mobile){const clean=a.mobile.replace(/\s/g,'');info.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'">'+esc(a.mobile)+'</a></div>';}cell.appendChild(info);}else if(isAdmin){const empty=document.createElement('div');empty.className='dm-cell-empty';empty.textContent='+ Add driver info';cell.appendChild(empty);}}td.appendChild(cell);tr.appendChild(td);});
+    dates.forEach(dt=>{const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');if(!isHoliday(dt.iso)){const a=state.admin[k]||{};const hasInfo=a.driver||a.plate||a.mobile;if(isAdmin){cell.style.cursor='pointer';cell.onclick=()=>openDriverModal(p,dt.iso);}if(hasInfo){const info=document.createElement('div');info.className='dm-cell-info';if(a.plate)info.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';if(a.driver)info.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';if(a.mobile){const clean=a.mobile.replace(/\s/g,'');info.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'" onclick="event.stopPropagation()">'+esc(a.mobile)+'</a></div>';}cell.appendChild(info);}else if(isAdmin){const empty=document.createElement('div');empty.className='dm-cell-empty';empty.textContent='+ Add driver info';cell.appendChild(empty);}}td.appendChild(cell);tr.appendChild(td);});
     body.appendChild(tr);
   });
 }
