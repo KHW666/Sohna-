@@ -852,7 +852,16 @@ function appendAdminInfo(cell,k){
     const box=document.createElement('div');box.className='admininfo';
     if(a.driver)box.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';
     if(a.plate)box.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';
-    if(a.mobile){const clean=a.mobile.replace(/\s/g,'');box.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'" onclick="event.stopPropagation()">'+esc(a.mobile)+'</a></div>';}
+    if(a.mobile){
+      const clean=a.mobile.replace(/\s/g,'');
+      const row=document.createElement('div');row.className='arow';
+      row.innerHTML=I.phone;
+      const link=document.createElement('a');link.className='tel-link';link.href='tel:'+clean;link.textContent=a.mobile;
+      link.addEventListener('click',e=>e.stopPropagation());
+      row.appendChild(link);
+      row.addEventListener('click',e=>e.stopPropagation());
+      box.appendChild(row);
+    }
     cell.appendChild(box);
   }
 }
@@ -925,7 +934,7 @@ function renderPasteTable(){
     const nm=document.createElement('div');nm.className='paste-pname';nm.textContent=p;ph.appendChild(nm);
     if(state.addresses[p]){const ad=document.createElement('div');ad.className='paste-paddr';ad.textContent='Address: '+state.addresses[p];ph.appendChild(ad);}
     ptd.appendChild(ph);tr.appendChild(ptd);
-    dates.forEach(dt=>{const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');if(!isHoliday(dt.iso)){const a=state.admin[k]||{};const hasInfo=a.driver||a.plate||a.mobile;if(isAdmin){cell.style.cursor='pointer';cell.onclick=()=>openDriverModal(p,dt.iso);}if(hasInfo){const info=document.createElement('div');info.className='dm-cell-info';if(a.plate)info.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';if(a.driver)info.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';if(a.mobile){const clean=a.mobile.replace(/\s/g,'');info.innerHTML+='<div class="arow">'+I.phone+'<a class="tel-link" href="tel:'+esc(clean)+'" onclick="event.stopPropagation()">'+esc(a.mobile)+'</a></div>';}cell.appendChild(info);}else if(isAdmin){const empty=document.createElement('div');empty.className='dm-cell-empty';empty.textContent='+ Add driver info';cell.appendChild(empty);}}td.appendChild(cell);tr.appendChild(td);});
+    dates.forEach(dt=>{const k=ckey(p,dt.iso),td=document.createElement('td'),cell=document.createElement('div');cell.className='paste-cell'+(isHoliday(dt.iso)?' blkd':'');if(!isHoliday(dt.iso)){const a=state.admin[k]||{};const hasInfo=a.driver||a.plate||a.mobile;if(isAdmin){cell.style.cursor='pointer';cell.onclick=()=>openDriverModal(p,dt.iso);}if(hasInfo){const info=document.createElement('div');info.className='dm-cell-info';if(a.plate)info.innerHTML+='<div class="arow">'+I.car+'<span class="plate">'+esc(a.plate)+'</span></div>';if(a.driver)info.innerHTML+='<div class="arow">'+I.user+'<span>'+esc(a.driver)+'</span></div>';if(a.mobile){const clean=a.mobile.replace(/\s/g,'');const mrow=document.createElement('div');mrow.className='arow';mrow.innerHTML=I.phone;const ml=document.createElement('a');ml.className='tel-link';ml.href='tel:'+clean;ml.textContent=a.mobile;ml.addEventListener('click',e=>e.stopPropagation());mrow.appendChild(ml);mrow.addEventListener('click',e=>e.stopPropagation());info.appendChild(mrow);}cell.appendChild(info);}else if(isAdmin){const empty=document.createElement('div');empty.className='dm-cell-empty';empty.textContent='+ Add driver info';cell.appendChild(empty);}}td.appendChild(cell);tr.appendChild(td);});
     body.appendChild(tr);
   });
 }
